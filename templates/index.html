@@ -43,22 +43,17 @@
         </form><br><br>
         <table>
             <tr>
-                {% for h in QUESTION_HEADER %}
-                    {%  if loop.index in [2,3,4,5] %}
-                <th><strong>{{ h }}</strong></th>
-                    {% endif %}
-                {% endfor %}
+                <td><b>Title</b></td>
+                <td><b>Submission time</b></td>
+                <td><b>View number</b></td>
+                <td><b>Vote number</b></td>
             </tr>
-            {% for line in all_questions %}
-                {% set outer_loop = loop %}
+            {% for question in questions %}
             <tr>
-                {% for item in line %}
-                    {%  if loop.index in [3,4,5] %}
-                    <td>{{item}}</td>
-                   {% elif loop.index == 2 %}
-                        <td><a href="/question/{{all_questions[outer_loop.index0][0]}}">{{item}}</a></td>
-                   {% endif %}
-                {% endfor %}
+                <td><a href="/question/{{question.id}}">{{question.title}}</a></td>
+                <td>{{question.submission_time}}</td>
+                <td>{{question.view_number}}</td>
+                <td>{{question.vote_number}}</td>
             </tr>
             {% endfor %}
         </table>

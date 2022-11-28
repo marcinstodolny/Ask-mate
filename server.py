@@ -8,51 +8,37 @@ app = Flask(__name__)
 
 
 QUESTION_HEADER = ['ID', 'Title', 'Submission time', 'View number', 'Vote number', 'Message', 'Image']
-HEADERS_INDEX = {'id': 0, 'title': 1, 'submission time': 2, 'view number': 3, 'vote number': 4, 'message': 5, 'image': 6}
-ANSWER_INDEX = {'id': 0, 'submission time': 1, 'vote number': 2, 'question id': 3, 'message': 4, 'image': 5}
-COMMENT_INDEX = {'id': 0, 'submission time': 1, 'vote number': 2, 'question id': 3, 'message': 4}
-Q_WAY = os.path.abspath("static\\upload\\questions\\")
-A_WAY = os.path.abspath("static\\upload\\answers\\")
+
 
 @app.route("/")
 @app.route("/list")
 def main_page():
-    all_questions = data_manager.get_all_data_from_file("questions.csv")[::-1]
-    for item in all_questions:
-        date = datetime.date.fromtimestamp(int(item[2]))
-        item[2] = f"{date.day}-{date.month}-{date.year}"
+    all_questions = data_manager.get_all_question_data("question")[::-1]
     return render_template('index.html',
-                           all_questions=all_questions,
+                           questions=all_questions,
                            QUESTION_HEADER=QUESTION_HEADER)
 
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    questions = data_manager.get_all_data_from_file("questions.csv")
-    answers = data_manager.get_all_data_from_file("answers.csv")
-    current_question = util.increment_view_number(questions, question_id, HEADERS_INDEX)
-    duration = int(time.time() - int(current_question[HEADERS_INDEX["submission time"]]))
-    question_time = [str(datetime.timedelta(seconds=(int(time.time() - int(item[ANSWER_INDEX["submission time"]]))))) for item in answers]
+    question = data_manager.get_question_by_id(question_id)
+    answers = data_manager.get_answers_by_question_id(question_id)
+    # duration = int(time.time() - int(current_question[HEADERS_INDEX["submission time"]]))
+    # question_time = [str(datetime.timedelta(seconds=(int(time.time() - int(item[ANSWER_INDEX["submission time"]]))))) for item in answers]
     return render_template('question.html',
-                           question=current_question[1:],
-                           time=str(datetime.timedelta(seconds=duration)),
-                           question_id=question_id,
-                           answers=answers,
-                           q_time=question_time)
+                           question=question[0],
+                           answers=answers)
 
 
 @app.route("/add_question", methods=['GET', 'POST'])
 def add_question():
-    all_questions = data_manager.get_all_data_from_file("questions.csv")
     if request.method == 'POST':
-        new_question = util.set_new_values(HEADERS_INDEX, all_questions, 7)
-        new_question[HEADERS_INDEX["title"]] = request.form['title']
-        new_question[HEADERS_INDEX["message"]] = request.form['message']
-        new_question[HEADERS_INDEX["image"]] = data_manager.save_photo(request.files["file"], len(all_questions), "questions")
-        data_manager.write_file("questions.csv", all_questions, new_question)
-        return redirect(f"/question/{new_question[0]}")
-    return render_template('add_question.html',
-                           title="Add question")
+        question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # request.files["file"]
+        data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], 0)
+        question_id = data_manager.get_question_id(question_time)[0]
+        return redirect(f"/question/{question_id['id']}")
+    return render_template('add_question.html', title="Add question")
 
 
 @app.route("/question/<question_id>/edit", methods=['GET', 'POST'])

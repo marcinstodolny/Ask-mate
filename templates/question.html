@@ -9,62 +9,62 @@
         <div id="center">
             <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
             <br>
-            <p id="title"><strong>{{ question[0] }}</strong></p>
-                <form action="/question/{{ question_id }}/vote-up" method="post">
+            <p id="title"><strong>{{ question.title }}</strong></p>
+                <form action="/question/{{ question.id }}/vote-up" method="post">
                     <span class="multi_tab"></span>
                     <span class="multi_tab"></span>
                     <input  type="submit" value="&#8593" name="vote_up">
                 </form>
             <p id="info">
-                Asked {{ time }} ago
+                Asked {{ question.submission_time }}
                 <span class="tab"></span>
-                Viewed {{ question[2] }}
+                Viewed {{ question.view_number }}
                 <span class="tab"></span>
-                Vote number {{ question[3] }}
+                Vote number {{ question.vote_number }}
             </p>
-                <form action="/question/{{ question_id }}/vote-down" method="post">
+                <form action="/question/{{ question.id }}/vote-down" method="post">
                     <span class="multi_tab"></span>
                     <span class="multi_tab"></span>
                     <input type="submit" value="&#8595" name="vote_down">
                 </form>
         </div>
         <div id="center" style="margin-right: 175px">
-            <form style="display:inline-block" action="/question/{{ question_id }}/edit" method="get">
+            <form style="display:inline-block" action="/question/{{ question.id }}/edit" method="get">
                 <button type="submit">Edit question</button>
             </form>
             <span class="tab"></span>
-            <form style="display:inline-block" action="/question/{{ question_id }}/delete" method="post">
+            <form style="display:inline-block" action="/question/{{ question.id }}/delete" method="post">
                 <button type="submit">Delete</button>
             </form>
         </div><br>
         <div id="center">
-            <p id="message">{{ question[4] }}</p>
-            {% if question[5] != "number" %}
-            <img src="/static/upload/questions/{{ question_id }}.png" alt="" width="800">
+            <p id="message">{{ question.message }}</p>
+            {% if question.image != "number" %}
+            <img src="/static/upload/questions/{{ question.id }}.png" alt="" width="800">
             {% endif %}
                 <table>
-            {% for answer in coments %}
-                {% if answer[3] == question_id %}
-                    <tr>
-                        <td>Answered: {{ q_time[loop.index0] }} ago</td>
-                        <td>{{ answer[4] }}</td>
-                        <td>
-                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-up" method="post">
-                                <input type="submit" value="&#8593" name="vote_up">
-                            </form>
-                            <span class="number">{{ answer[2] }}</span>
-                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-down" method="post">
-                                <input type="submit" value="&#8595" name="vote_down">
-                            </form>
-                        </td>
-                        <td>
-                            <form action="/answer/{{ answer[0] }}/delete" method="post">
-                                <button type="submit">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
+{#            {% for answer in coments %}#}
+{#                {% if answer[3] == question_id %}#}
+{#                    <tr>#}
+{#                        <td>Answered: {{ q_time[loop.index0] }} ago</td>#}
+{#                        <td>{{ answer[4] }}</td>#}
+{#                        <td>#}
+{#                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-up" method="post">#}
+{#                                <input type="submit" value="&#8593" name="vote_up">#}
+{#                            </form>#}
+{#                            <span class="number">{{ answer[2] }}</span>#}
+{#                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-down" method="post">#}
+{#                                <input type="submit" value="&#8595" name="vote_down">#}
+{#                            </form>#}
+{#                        </td>#}
+{#                        <td>#}
+{#                            <form action="/answer/{{ answer[0] }}/delete" method="post">#}
+{#                                <button type="submit">Delete</button>#}
+{#                            </form>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
         </table>
         </div>
         <div id="center" style="margin-right: 925px;">
@@ -75,34 +75,34 @@
         <br>
         <div>
         <table >
-            {% for answer in answers %}
-                {% if answer[3] == question_id %}
-                    <tr>
-                        <td style="font-size: 20px; padding-top: 20px" id="message">{{ answer[4] }}</td>
-                    </tr>
-                    <tr>
-                    <td class="image"><a href="/static/upload/answers/{{ loop.index }}.png"><img id="image3" src="/static/upload/answers/{{ loop.index }}.png" alt="" width="400"></a></td>
-                    </tr>
-                    <tr style="font-size: 13px">
-                        <td>Answered: {{ q_time[loop.index0] }} ago</td>
-                        <td>
-                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-up" method="post" style="display: inline-block">
-                                <input type="submit" value="&#8593" name="vote_up">
-                            </form>
-                            <span class="number">{{ answer[2] }}</span>
-                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-down" method="post" style="display: inline-block">
-                                <input type="submit" value="&#8595" name="vote_down">
-                            </form>
-                        </td>
-                        <td>
-                            <form action="/answer/{{ answer[0] }}/delete" method="post">
-                                <button type="submit">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    <tr style="border: solid gray; border-width: 1px 0"></tr>
-                {% endif %}
-            {% endfor %}
+{#            {% for answer in answers %}#}
+{#                {% if answer[3] == question_id %}#}
+{#                    <tr>#}
+{#                        <td style="font-size: 20px; padding-top: 20px" id="message">{{ answer[4] }}</td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                    <td class="image"><a href="/static/upload/answers/{{ loop.index }}.png"><img id="image3" src="/static/upload/answers/{{ loop.index }}.png" alt="" width="400"></a></td>#}
+{#                    </tr>#}
+{#                    <tr style="font-size: 13px">#}
+{#                        <td>Answered: {{ q_time[loop.index0] }} ago</td>#}
+{#                        <td>#}
+{#                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-up" method="post" style="display: inline-block">#}
+{#                                <input type="submit" value="&#8593" name="vote_up">#}
+{#                            </form>#}
+{#                            <span class="number">{{ answer[2] }}</span>#}
+{#                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-down" method="post" style="display: inline-block">#}
+{#                                <input type="submit" value="&#8595" name="vote_down">#}
+{#                            </form>#}
+{#                        </td>#}
+{#                        <td>#}
+{#                            <form action="/answer/{{ answer[0] }}/delete" method="post">#}
+{#                                <button type="submit">Delete</button>#}
+{#                            </form>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    <tr style="border: solid gray; border-width: 1px 0"></tr>#}
+{#                {% endif %}#}
+{#            {% endfor %}#}
         </table>
         </div>
         <footer id="center">

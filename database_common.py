@@ -10,7 +10,7 @@ def get_connection_string():
     os.environ["PSQL_USER_NAME"] = "postgres"
     os.environ["PSQL_PASSWORD"] = "admin"
     os.environ["PSQL_HOST"] = "localhost"
-    os.environ["PSQL_DB_NAME"] = "ask-mate"
+    os.environ["PSQL_DB_NAME"] = "ask_mate"
     user_name = os.environ.get('PSQL_USER_NAME')
     password = os.environ.get('PSQL_PASSWORD')
     host = os.environ.get('PSQL_HOST')

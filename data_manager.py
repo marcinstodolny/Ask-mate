@@ -6,17 +6,15 @@ from psycopg2.extras import RealDictCursor
 
 import database_common
 
+
 # @database_common.connection_handler
-# def get_mentors_by_last_name(cursor, last_name):
+# def get_all_question_data(cursor, table):
 #     query = """
-#         SELECT first_name, last_name, city
-#         FROM mentor
-#         WHERE last_name = %(last_name)s
-#         ORDER BY first_name"""
-#     cursor.execute(query, {'last_name': last_name})
+#             SELECT *
+#             FROM %(table)s
+#             """
+#     cursor.execute(query, {'table': table})
 #     return cursor.fetchall()
-
-
 @database_common.connection_handler
 def get_all_question_data(cursor, table):
     query = f"""
@@ -29,80 +27,79 @@ def get_all_question_data(cursor, table):
 
 @database_common.connection_handler
 def add_new_question(cursor, submission_time, view_number, vote_number, title, message, image):
-    query = f"""
+    query = """
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                VALUES ('{submission_time}', '{view_number}', '{vote_number}', '{title}', '{message}', {image})
+                VALUES (%s, %s, %s, %s, %s, %s)
                 """
-    cursor.execute(query)
+
+    cursor.execute(query, [submission_time, view_number, vote_number, title, message, image])
 
 
 @database_common.connection_handler
 def update_question(cursor, question_id, title, message):
-    query = f"""
+    query = """
                 UPDATE question
                 SET 
-                title = '{title}',
-                message = '{message}'
-                WHERE id = {question_id};
+                title = %s,
+                message = %s
+                WHERE id = %s;
                 """
-    cursor.execute(query)
+    cursor.execute(query, [title, message, question_id])
 
 
-@database_common.connection_handler
-def remove_question(cursor, question_id):
-    query = f"""
-                DELETE FROM question
-                WHERE id = {question_id}
-                DELETE FROM comment
-                WHERE question_id = {question_id}
-                DELETE FROM answer
-                WHERE question_id = {question_id}"""
-
-    cursor.execute(query)
+def delete_question(cursor, question_id):
+    query = """
+        DELETE FROM question
+        WHERE id = %s;
+        DELETE FROM comment
+        WHERE question_id = %s;
+        DELETE FROM answer
+        WHERE question_id = %s;"""
+    cursor.execute(query, [question_id, question_id, question_id])
 
 
 @database_common.connection_handler
 def get_question_by_id(cursor, question_id):
-    query = f"""
+    query = """
                 SELECT *
                 FROM question
-                where id = '{question_id}'
+                where id = %s
                 """
-    cursor.execute(query)
+    cursor.execute(query, [question_id])
     return cursor.fetchall()
 
 
 @database_common.connection_handler
 def get_question_id(cursor, time):
-    query = f"""
+    query = """
                 SELECT id
                 FROM question
-                where submission_time = '{time}'
+                where submission_time = %s
                 """
-    cursor.execute(query)
+    cursor.execute(query, [time])
     return cursor.fetchall()
 
 
 @database_common.connection_handler
 def get_answers_by_question_id(cursor, question_id):
-    query = f"""
+    query = """
                     SELECT *
                     FROM answer
-                    where question_id = '{question_id}'
+                    where question_id = %s
                     """
-    cursor.execute(query)
+    cursor.execute(query, [question_id])
     return cursor.fetchall()
 
 
 @database_common.connection_handler
 def update_image(cursor, question_id, image):
-    query = f"""
+    query = """
                 UPDATE question
                 SET 
-                image = '{image}'
-                WHERE id = {question_id};
+                image = %s
+                WHERE id = %s;
                 """
-    cursor.execute(query)
+    cursor.execute(query, [image, question_id])
 
 
 def save_photo(img, id_index, folder):
@@ -126,5 +123,3 @@ def remove_photo(all_questions, id_index, way):
         os.remove(f"{way}\\{id_index + 1}.png")
     all_questions.pop(id_index)
     return all_questions
-
-

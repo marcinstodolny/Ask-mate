@@ -47,6 +47,7 @@ def update_question(cursor, question_id, title, message):
     cursor.execute(query, [title, message, question_id])
 
 
+@database_common.connection_handler
 def delete_question(cursor, question_id):
     query = """
         DELETE FROM question

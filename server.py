@@ -61,19 +61,11 @@ def edit_question(question_id):
                            question_message=edited_question[HEADERS_INDEX['message']])
 
 
-@app.route("/question/<question_id>/delete", methods=['GET', 'POST'])
+@app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
-    id_index = int(question_id) - 1
-    all_questions = data_manager.get_all_data_from_file("questions.csv")
-    all_answers = data_manager.get_all_data_from_file("answers.csv")
     if request.method == 'POST':
-        all_answers = data_manager.remove_question_answers(ANSWER_INDEX, question_id, all_answers)
-        all_questions = data_manager.remove_photo(all_questions, id_index, Q_WAY)
-        data_manager.reindex_items(all_answers, int(question_id), ANSWER_INDEX, rewrite_question_id=True)
-        data_manager.reindex_items(all_questions, id_index, HEADERS_INDEX, Q_WAY)
-        data_manager.write_file("questions.csv", all_questions)
-        data_manager.write_file("answers.csv", all_answers)
-    return redirect('/')
+        data_manager.delete_question(question_id)
+        return redirect('/')
 
 
 @app.route("/question/<question_id>/vote-up", methods=["POST"])

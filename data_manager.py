@@ -6,16 +6,6 @@ from psycopg2.extras import RealDictCursor
 
 import database_common
 
-# @database_common.connection_handler
-# def get_mentors_by_last_name(cursor, last_name):
-#     query = """
-#         SELECT first_name, last_name, city
-#         FROM mentor
-#         WHERE last_name = %(last_name)s
-#         ORDER BY first_name"""
-#     cursor.execute(query, {'last_name': last_name})
-#     return cursor.fetchall()
-
 
 @database_common.connection_handler
 def get_all_question_data(cursor, table):
@@ -37,16 +27,15 @@ def add_new_question(cursor, submission_time, view_number, vote_number, title, m
 
 
 @database_common.connection_handler
-def remove_question(cursor, question_id):
-    query = f"""
-                DELETE FROM question
-                WHERE id = {question_id}
-                DELETE FROM comment
-                WHERE question_id = {question_id}
-                DELETE FROM answer
-                WHERE question_id = {question_id}"""
-
-    cursor.execute(query)
+def delete_question(cursor, question_id):
+    query = """
+        DELETE FROM question
+        WHERE id = %s;
+        DELETE FROM comment
+        WHERE question_id = %s;
+        DELETE FROM answer
+        WHERE question_id = %s;"""
+    cursor.execute(query, [question_id])
 
 
 @database_common.connection_handler
@@ -102,5 +91,4 @@ def remove_photo(all_questions, id_index, way):
         os.remove(f"{way}\\{id_index + 1}.png")
     all_questions.pop(id_index)
     return all_questions
-
 

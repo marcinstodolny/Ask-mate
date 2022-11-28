@@ -1,0 +1,34 @@
+#center{
+    text-align: center;
+}
+.tab{
+    margin-left: 100px;
+}
+.multi_tab{
+    margin-left: 250px;
+}
+#message{
+    font-size: 35px;
+}
+#info{
+    font-size: 18px
+}
+#title{
+    font-size: 50px;
+    word-break:break-word;
+}
+tr, td{
+    word-wrap:break-word;
+    max-width: 900px;
+}
+table{
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+.image {
+    border: 0;
+}
+.image img {
+display: block;
+}

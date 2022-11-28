@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+        body{
+             text-align: center;
+        }
+        th,td{
+            border:1px solid black;
+            word-wrap:break-word;
+            max-width: 900px;
+            padding: 10px;
+        }
+        table {
+            margin-left: auto;
+            margin-right: auto;
+            border-collapse: collapse;
+        }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>ASK MATE by Marcin, Marcin, Basia & Tomek</title>
+</head>
+    <body>
+        <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
+        <form action="/add_question" method="get" style="display: inline-block">
+            <button type="submit">Add new question</button>
+            <span style="margin-left: 50px"></span>
+        </form>
+        <form action="/list/sort" method="post" style="display: inline-block">
+            <label for="sort_by">Sort by:</label>
+            <select name="sort_by" id="sort_by">
+              <option value="title" {% if sort == "title" %} selected {% endif %}>Title</option>
+              <option value="submission time" {% if sort == "submission time" %} selected {% endif %}>Submission time</option>
+              <option value="view number" {% if sort == "view number" %} selected {% endif %}>View number</option>
+              <option value="vote number" {% if sort == "vote number" %} selected {% endif %}>Vote number</option>
+            </select>
+            <label for="order_by">Order by:</label>
+            <select name="order_by" id="order_by">
+              <option value="ascending" {% if order == "ascending" %} selected {% endif %}>Ascending</option>
+              <option value="descending" {% if order == "descending" %} selected {% endif %}>Descending</option>
+            </select>
+            <input type="submit" value="Sort" name="sort">
+        </form><br><br>
+        <table>
+            <tr>
+                {% for h in QUESTION_HEADER %}
+                    {%  if loop.index in [2,3,4,5] %}
+                <th><strong>{{ h }}</strong></th>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% for line in all_questions %}
+                {% set outer_loop = loop %}
+            <tr>
+                {% for item in line %}
+                    {%  if loop.index in [3,4,5] %}
+                    <td>{{item}}</td>
+                   {% elif loop.index == 2 %}
+                        <td><a href="/question/{{all_questions[outer_loop.index0][0]}}">{{item}}</a></td>
+                   {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <footer>
+            <br>
+            <p>© 2022 Marcin, Marcin, Basia & Tomek</p>
+        </footer>
+    </body>
+</html>

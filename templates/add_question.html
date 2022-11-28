@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}{{ title }}{% endblock %}
+{% block action %}/add_question{% endblock %}
+{% block title_area %}
+    <label for="title">Title:</label><br>
+    <label>
+        <input type="text" name="title" required>
+    </label><br><br>
+{% endblock %}
+{% block button %}{{ title }}{% endblock %}

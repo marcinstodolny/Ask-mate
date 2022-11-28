@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    body{
+            text-align: center;
+        }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <div id="image">
+        <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
+        <br>
+    </div>
+    <h1>{% block header %}{% endblock %}</h1>
+    <form action="{% block action %}{% endblock %}" method="post" enctype="multipart/form-data">
+    {% block title_area %}{% endblock %}
+        <label for="message">Message:</label><br>
+        <label>
+            <textarea name="message" cols="30" rows="5" required>{% block message %}{% endblock %}</textarea>
+        </label><br><br>
+            <input type="file" name="file" id="file">
+            <br><br>
+        <button type="submit">{% block button %}{% endblock %}</button>
+    </form>
+    <br>
+    <br>
+    <a href="/">Back to main page</a>
+</body>
+</html>

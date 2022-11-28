@@ -37,6 +37,18 @@ def add_new_question(cursor, submission_time, view_number, vote_number, title, m
 
 
 @database_common.connection_handler
+def update_question(cursor, question_id, title, message):
+    query = f"""
+                UPDATE question
+                SET 
+                title = '{title}',
+                message = '{message}'
+                WHERE id = {question_id};
+                """
+    cursor.execute(query)
+
+
+@database_common.connection_handler
 def remove_question(cursor, question_id):
     query = f"""
                 DELETE FROM question
@@ -58,6 +70,7 @@ def get_question_by_id(cursor, question_id):
                 """
     cursor.execute(query)
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def get_question_id(cursor, time):
@@ -81,10 +94,21 @@ def get_answers_by_question_id(cursor, question_id):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def update_image(cursor, question_id, image):
+    query = f"""
+                UPDATE question
+                SET 
+                image = '{image}'
+                WHERE id = {question_id};
+                """
+    cursor.execute(query)
+
+
 def save_photo(img, id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
-    img.save(f"{way}\\{id_index + 1}.png")
-    return f"{id_index + 1}.png"
+    img.save(f"{way}\\{id_index}.png")
+    return f"{id_index}.png"
 
 
 def remove_question_answers(header, question_id, all_answers):

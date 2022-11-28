@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block title %}{{ title }}{% endblock %}
 {% block header %}{{ title }}{% endblock %}
-{% block action %}/question/{{ question_id }}/edit{% endblock %}
+{% block action %}/question/{{ question.id }}/edit{% endblock %}
 {% block title_area %}
     <label for="title">Title:</label><br>
     <label>
-        <input type="text" name="title" required value="{{ question_title }}">
+        <input type="text" name="title" required value="{{ question.title }}">
     </label><br><br>
 {% endblock %}
-{% block message %}{{ question_message }}{% endblock %}
+{% block message %}{{ question.message }}{% endblock %}
 {% block button %}{{ title }}{% endblock %}

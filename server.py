@@ -21,44 +21,36 @@ def main_page():
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
-    question = data_manager.get_question_by_id(question_id)
+    question = data_manager.get_question_by_id(question_id)[0]
     answers = data_manager.get_answers_by_question_id(question_id)
-    # duration = int(time.time() - int(current_question[HEADERS_INDEX["submission time"]]))
-    # question_time = [str(datetime.timedelta(seconds=(int(time.time() - int(item[ANSWER_INDEX["submission time"]]))))) for item in answers]
-    return render_template('question.html',
-                           question=question[0],
-                           answers=answers)
+    return render_template('question.html', question=question, answers=answers)
 
 
 @app.route("/add_question", methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        # request.files["file"]
         data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], 0)
-        question_id = data_manager.get_question_id(question_time)[0]
-        return redirect(f"/question/{question_id['id']}")
+        question_id = data_manager.get_question_id(question_time)[0]['id']
+        if request.files["file"]:
+            data_manager.save_photo(request.files["file"], question_id, 'question')
+            data_manager.update_image(question_id, f'{question_id}.png')
+        return redirect(f"/question/{question_id}")
     return render_template('add_question.html', title="Add question")
 
 
 @app.route("/question/<question_id>/edit", methods=['GET', 'POST'])
 def edit_question(question_id):
-    id_index = int(question_id) - 1
-    all_questions = data_manager.get_all_data_from_file("questions.csv")
-    edited_question = list(all_questions[id_index])
+    question = data_manager.get_question_by_id(question_id)[0]
     if request.method == 'POST':
-        edited_question[HEADERS_INDEX['title']] = request.form['title']
-        edited_question[HEADERS_INDEX['message']] = request.form['message']
-        all_questions.pop(id_index)
-        all_questions.insert(id_index, edited_question)
-        edited_question[HEADERS_INDEX["image"]] = data_manager.save_photo(request.files["file"], id_index, "questions")
-        data_manager.write_file("questions.csv", all_questions)
+        data_manager.update_question(question_id, request.form['title'], request.form['message'])
+        if request.files["file"]:
+            data_manager.save_photo(request.files["file"], question_id, 'question')
+            data_manager.update_image(question_id, f'{question_id}.png')
         return redirect(f"/question/{question_id}")
     return render_template('edit_question.html',
                            title="Edit question",
-                           question_id=question_id,
-                           question_title=edited_question[HEADERS_INDEX['title']],
-                           question_message=edited_question[HEADERS_INDEX['message']])
+                           question=question)
 
 
 @app.route("/question/<question_id>/delete", methods=['GET', 'POST'])

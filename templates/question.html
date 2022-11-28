@@ -39,9 +39,7 @@
         </div><br>
         <div id="center">
             <p id="message">{{ question.message }}</p>
-            {% if question.image != "number" %}
-            <img src="/static/upload/questions/{{ question.id }}.png" alt="" width="800">
-            {% endif %}
+            <img src="/static/upload/question/{{ question.id }}.png" alt="" width="800">
                 <table>
 {#            {% for answer in coments %}#}
 {#                {% if answer[3] == question_id %}#}

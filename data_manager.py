@@ -52,11 +52,8 @@ def delete_question(cursor, question_id):
     query = """
         DELETE FROM question
         WHERE id = %s;
-        DELETE FROM comment
-        WHERE question_id = %s;
-        DELETE FROM answer
-        WHERE question_id = %s;"""
-    cursor.execute(query, [question_id, question_id, question_id])
+        """
+    cursor.execute(query, [question_id])
 
 
 @database_common.connection_handler

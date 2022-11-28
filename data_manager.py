@@ -100,6 +100,18 @@ def update_image(cursor, question_id, image):
     cursor.execute(query, [image, question_id])
 
 
+@database_common.connection_handler
+def increment_view_number(cursor, question_id, table):
+    query = f"""
+                    UPDATE {table}
+                    SET 
+                    view_number = view_number + 1
+                    WHERE id = %s;
+                    """
+    cursor.execute(query, [question_id])
+
+
+
 def save_photo(img, id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     img.save(f"{way}\\{id_index}.png")

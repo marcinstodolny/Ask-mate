@@ -13,16 +13,15 @@ QUESTION_HEADER = ['ID', 'Title', 'Submission time', 'View number', 'Vote number
 @app.route("/")
 @app.route("/list")
 def main_page():
-    all_questions = data_manager.get_all_question_data("question")[::-1]
-    return render_template('index.html',
-                           questions=all_questions,
-                           QUESTION_HEADER=QUESTION_HEADER)
+    all_questions = data_manager.get_all_question_data('question')[::-1]
+    return render_template('index.html', questions=all_questions,)
 
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     answers = data_manager.get_answers_by_question_id(question_id)
+    data_manager.increment_view_number(question_id, 'question')
     return render_template('question.html', question=question, answers=answers)
 
 
@@ -30,7 +29,7 @@ def display_question(question_id):
 def add_question():
     if request.method == 'POST':
         question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], 0)
+        data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], '')
         question_id = data_manager.get_question_id(question_time)[0]['id']
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], question_id, 'question')

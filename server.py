@@ -31,29 +31,27 @@ def display_question(question_id):
 
 @app.route("/add_question", methods=['GET', 'POST'])
 def add_question():
-    if request.method == 'POST':
-        question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
-        question_id = data_manager.get_question_id(question_time)[0]['id']
-        if request.files["file"]:
-            data_manager.save_photo(request.files["file"], question_id, 'question')
-            data_manager.update_image('question', question_id, f'{question_id}.png')
-        return redirect(f"/question/{question_id}")
-    return render_template('add_question.html', title="Add question")
+    if request.method != 'POST':
+        return render_template('add_question.html', title="Add question")
+    question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
+    question_id = data_manager.get_question_id(question_time)[0]['id']
+    if request.files["file"]:
+        data_manager.save_photo(request.files["file"], question_id, 'question')
+        data_manager.update_image('question', question_id, f'{question_id}.png')
+    return redirect(f"/question/{question_id}")
 
 
 @app.route("/question/<question_id>/edit", methods=['GET', 'POST'])
 def edit_question(question_id):
-    if request.method == 'POST':
-        data_manager.update_question(question_id, request.form['title'], request.form['message'])
-        if request.files["file"]:
-            data_manager.save_photo(request.files["file"], question_id, 'question')
-            data_manager.update_image(question_id, f'{question_id}.png')
-        return redirect(f"/question/{question_id}")
-    question = data_manager.get_question_by_id(question_id)[0]
-    return render_template('edit_question.html',
-                           title="Edit question",
-                           question=question)
+    if request.method != 'POST':
+        question = data_manager.get_question_by_id(question_id)[0]
+        return render_template('edit_question.html', title="Edit question", question=question)
+    data_manager.update_question(question_id, request.form['title'], request.form['message'])
+    if request.files["file"]:
+        data_manager.save_photo(request.files["file"], question_id, 'question')
+        data_manager.update_image(question_id, f'{question_id}.png')
+    return redirect(f"/question/{question_id}")
 
 
 @app.route("/question/<question_id>/delete", methods=['POST'])
@@ -67,9 +65,9 @@ def delete_question(question_id):
 @app.route("/answer/<answer_id>/<question_id>/vote-up", methods=["POST"])
 def up_vote(question_id, answer_id=None):
     if answer_id:
-        data_manager.increment_vote_number(answer_id, 'answer')
+        data_manager.change_vote_number(answer_id, 'answer', 1)
     else:
-        data_manager.increment_vote_number(question_id, 'question')
+        data_manager.change_vote_number(question_id, 'question', 1)
     return redirect(f"/question/{question_id}")
 
 
@@ -77,9 +75,9 @@ def up_vote(question_id, answer_id=None):
 @app.route("/answer/<answer_id>/<question_id>/vote-down", methods=["POST"])
 def down_vote(question_id, answer_id=None):
     if answer_id:
-        data_manager.decrement_vote_number(answer_id, 'answer')
+        data_manager.change_vote_number(answer_id, 'answer', -1)
     else:
-        data_manager.decrement_vote_number(question_id, 'question')
+        data_manager.change_vote_number(question_id, 'question', -1)
     return redirect(f"/question/{question_id}")
 
 
@@ -90,9 +88,7 @@ def add_comment(question_id=None, answer_id=None):
         submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.new_comment(submission_time, request.form['message'], 0, question_id=question_id, answer_id=answer_id)
         return redirect(f"/question/{question_id}")
-    return render_template('add_comment.html',
-                           title="Add comment",
-                           question_id=question_id)
+    return render_template('add_comment.html', title="Add comment", question_id=question_id)
 
 
 def sort_list(table, sort_by='submission_time', order_direction='DESC'):
@@ -101,19 +97,18 @@ def sort_list(table, sort_by='submission_time', order_direction='DESC'):
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):
-    if request.method == 'POST':
-        submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        message = request.form['message']
-        data_manager.new_answer(submission_time, 0, question_id, message, '')
-        answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
-        if request.files["file"]:
-            data_manager.save_photo(request.files["file"], answer_id, 'answer')
-            data_manager.update_image('answer', answer_id, f'{answer_id}.png')
-        return redirect(f"/question/{question_id}")
-
-    return render_template('add_answer.html',
-                           title="Add answer",
-                           question_id=question_id)
+    if request.method != 'POST':
+        return render_template('add_answer.html',
+                               title="Add answer",
+                               question_id=question_id)
+    submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    message = request.form['message']
+    data_manager.new_answer(submission_time, 0, question_id, message, '')
+    answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
+    if request.files["file"]:
+        data_manager.save_photo(request.files["file"], answer_id, 'answer')
+        data_manager.update_image('answer', answer_id, f'{answer_id}.png')
+    return redirect(f"/question/{question_id}")
 
 
 @app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])

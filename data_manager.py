@@ -137,26 +137,16 @@ def new_answer(cursor, time, vote, question_id, message, image):
         VALUES (%s, %s, %s, %s, %s)"""
     cursor.execute(query, [time, vote, question_id, message, image])
 
+
 @database_common.connection_handler
-def increment_vote_number(cursor, question_id, table):
+def change_vote_number(cursor, question_id, table, number):
     query = f"""
                         UPDATE {table}
                         SET 
-                        vote_number = vote_number + 1
+                        vote_number = vote_number + %s
                         WHERE id = %s;
                         """
-    cursor.execute(query, [question_id])
-
-
-@database_common.connection_handler
-def decrement_vote_number(cursor, question_id, table):
-    query = f"""
-                        UPDATE {table}
-                        SET 
-                        vote_number = vote_number - 1
-                        WHERE id = %s;
-                        """
-    cursor.execute(query, [question_id])
+    cursor.execute(query, [number, question_id])
 
 
 @database_common.connection_handler
@@ -180,6 +170,7 @@ def get_comments_by_question_id(cursor, question_id):
                         """
     cursor.execute(query, [question_id])
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def new_comment(cursor, time, message, edited_count, question_id=None, answer_id=None):

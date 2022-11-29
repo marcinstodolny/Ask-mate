@@ -123,7 +123,7 @@ def add_answer(question_id):
 @app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])
 def delete_answer(answer_id):
     if request.method == 'POST':
-        question_id = data_manager.get_question_id_by_answer_id(answer_id)
+        question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']
         data_manager.delete_answer(answer_id)
         data_manager.remove_photo(answer_id, 'answer')
         return redirect(f"/question/{question_id}")

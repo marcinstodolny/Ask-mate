@@ -111,7 +111,7 @@ def add_answer(question_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])
+@app.route('/answer/<answer_id>/delete', methods=['POST'])
 def delete_answer(answer_id):
     if request.method == 'POST':
         question_id = data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']

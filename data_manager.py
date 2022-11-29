@@ -194,16 +194,6 @@ def save_photo(img, id_index, folder):
     return f"{id_index}.png"
 
 
-def remove_question_answers(header, question_id, all_answers):
-    way = (os.path.abspath("static\\upload\\answers\\"))
-    for answer in reversed(all_answers):
-        if answer[header['question id']] == question_id:
-            all_answers.pop(int(answer[header['id']]) - 1)
-            if os.path.exists(f"{way}\\{int(answer[header['id']])}.png"):
-                os.remove(f"{way}\\{int(answer[header['id']])}.png")
-    return all_answers
-
-
 def remove_photo(id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     if os.path.exists(f"{way}\\{id_index}.png"):

@@ -6,16 +6,21 @@ import time
 app = Flask(__name__)
 
 
-@app.route("/", methods=['POST', 'GET'])
 @app.route("/list")
-def main_page():
+def all_questions():
     sort_by = request.form.get('sort_by')
     order_by = request.form.get('order_by')
     if sort_by is None:
-        all_questions = sort_list('question')
+        questions = sort_list('question')
     else:
-        all_questions = sort_list('question', sort_by, order_by)
-    return render_template('index.html', questions=all_questions, sort=sort_by, order=order_by)
+        questions = sort_list('question', sort_by, order_by)
+    return render_template('index.html', questions=questions, sort=sort_by, order=order_by)
+
+
+@app.route("/", methods=['POST', 'GET'])
+def main_page():
+    questions = data_manager.get_last_five_questions()
+    return render_template('index.html', questions=questions)
 
 
 @app.route("/question/<question_id>")
@@ -130,13 +135,6 @@ def edit_answer(answer_id):
         data_manager.save_photo(request.files["file"], answer_id, 'answer')
         data_manager.update_image(answer_id, f'{answer_id}.png')
     return redirect(f"/question/{answer['question_id']}")
-
-@app.route('/search', methods=['POST'])
-def searching():
-    if request.method == 'POST':
-        search_phrases = request.form.get('q')
-        all_questions = data_manager.search_questions(search_phrases)
-        return render_template('index.html', questions=all_questions)
 
 
 @app.route('/search', methods=['POST'])

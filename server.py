@@ -32,9 +32,10 @@ def display_question(question_id):
 def add_question():
     if request.method != 'POST':
         return render_template('add_question.html', title="Add question")
-    question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    question_time = datetime.datetime.now()
     data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
     question_id = data_manager.get_question_id(question_time)[0]['id']
+    data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], question_id, 'question')
         data_manager.update_image('question', question_id, f'{question_id}.png')
@@ -49,13 +50,14 @@ def edit_question(question_id):
     data_manager.update_question(question_id, request.form['title'], request.form['message'])
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], question_id, 'question')
-        data_manager.update_image(question_id, f'{question_id}.png')
+        data_manager.update_image('question', question_id, f'{question_id}.png')
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
     if request.method == 'POST':
+        data_manager.remove_files(question_id)
         data_manager.delete_question(question_id)
         return redirect('/')
 

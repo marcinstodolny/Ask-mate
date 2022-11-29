@@ -23,16 +23,17 @@ def main_page():
 def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     answers = data_manager.get_answers_by_question_id(question_id)
+    comments = data_manager.get_comments_by_question_id(question_id)
     question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']
     data_manager.increment_view_number(question_id, 'question')
-    return render_template('question.html', question=question, answers=answers)
+    return render_template('question.html', question=question, answers=answers, comments=comments)
 
 
 @app.route("/add_question", methods=['GET', 'POST'])
 def add_question():
     if request.method == 'POST':
         question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], '')
+        data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
         question_id = data_manager.get_question_id(question_time)[0]['id']
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], question_id, 'question')
@@ -63,36 +64,31 @@ def delete_question(question_id):
 
 
 @app.route("/question/<question_id>/vote-up", methods=["POST"])
-def up_vote(question_id):
-    data_manager.increment_vote_number(question_id, 'question')
-    return redirect(f"/question/{question_id}")
-
-
 @app.route("/answer/<answer_id>/<question_id>/vote-up", methods=["POST"])
-def answer_up_vote(answer_id, question_id):
-    data_manager.increment_vote_number(answer_id, 'answer')
+def up_vote(question_id, answer_id=None):
+    if answer_id:
+        data_manager.increment_vote_number(answer_id, 'answer')
+    else:
+        data_manager.increment_vote_number(question_id, 'question')
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/question/<question_id>/vote-down", methods=["POST"])
-def down_vote(question_id):
-    data_manager.decrement_vote_number(question_id, 'question')
-    return redirect(f"/question/{question_id}")
-
-
 @app.route("/answer/<answer_id>/<question_id>/vote-down", methods=["POST"])
-def answer_down_vote(answer_id, question_id):
-    data_manager.decrement_vote_number(answer_id, 'answer')
+def down_vote(question_id, answer_id=None):
+    if answer_id:
+        data_manager.decrement_vote_number(answer_id, 'answer')
+    else:
+        data_manager.decrement_vote_number(question_id, 'question')
     return redirect(f"/question/{question_id}")
 
 
+@app.route("/question/<answer_id>/new-comment", methods=["POST", "GET"])
 @app.route("/question/<question_id>/new-comment", methods=["POST", "GET"])
-def add_comment_to_question(question_id):
-    all_comments = data_manager.get_all_data_from_file("comments_to_questions.csv")
+def add_comment(question_id=None, answer_id=None):
     if request.method == 'POST':
-        new_comment = util.set_new_values(COMMENT_INDEX, all_comments, 5, question_id)
-        new_comment[COMMENT_INDEX["message"]] = request.form['message']
-        data_manager.write_file("comments_to_questions.csv", all_comments, new_comment)
+        submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data_manager.new_comment(submission_time, request.form['message'], 0, question_id=question_id, answer_id=answer_id)
         return redirect(f"/question/{question_id}")
     return render_template('add_comment.html',
                            title="Add comment",

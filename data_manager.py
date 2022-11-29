@@ -160,6 +160,25 @@ def get_sorted_data(cursor, table, sort_by, order_by):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def get_comments_by_question_id(cursor, question_id):
+    query = """
+                        SELECT *
+                        FROM comment
+                        WHERE question_id = %s
+                        ORDER BY id DESC
+                        """
+    cursor.execute(query, [question_id])
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def new_comment(cursor, time, message, edited_count, question_id=None, answer_id=None):
+    query = """
+            INSERT INTO comment (submission_time, question_id, answer_id, message, edited_count)
+            VALUES (%s, %s, %s, %s, %s)"""
+    cursor.execute(query, [time, question_id, answer_id, message, edited_count])
+
+
 def save_photo(img, id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     img.save(f"{way}\\{id_index}.png")

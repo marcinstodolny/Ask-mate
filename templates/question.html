@@ -40,29 +40,21 @@
         <div id="center">
             <p id="message">{{ question.message }}</p>
             <img src="/static/upload/question/{{ question.id }}.png" alt="" width="800">
-                <table>
-{#            {% for answer in coments %}#}
-{#                {% if answer[3] == question_id %}#}
-{#                    <tr>#}
-{#                        <td>Answered: {{ q_time[loop.index0] }} ago</td>#}
-{#                        <td>{{ answer[4] }}</td>#}
-{#                        <td>#}
-{#                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-up" method="post">#}
-{#                                <input type="submit" value="&#8593" name="vote_up">#}
-{#                            </form>#}
-{#                            <span class="number">{{ answer[2] }}</span>#}
-{#                            <form action="/answer/{{ loop.index }}/{{ question_id }}/vote-down" method="post">#}
-{#                                <input type="submit" value="&#8595" name="vote_down">#}
-{#                            </form>#}
-{#                        </td>#}
-{#                        <td>#}
-{#                            <form action="/answer/{{ answer[0] }}/delete" method="post">#}
-{#                                <button type="submit">Delete</button>#}
-{#                            </form>#}
-{#                        </td>#}
-{#                    </tr>#}
-{#                {% endif %}#}
-{#            {% endfor %}#}
+            <table>
+            {% for comment in comments %}
+                    <tr>
+                        <td style="padding-top: 20px" id="message2">{{ comment.message }}</td>
+                    </tr>
+                    <tr style="font-size: 13px">
+                        <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                        <td>
+                            <form action="/answer/{{ comment.id }}/delete" method="post">
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr style="border: solid gray; border-width: 1px 0"></tr>
+            {% endfor %}
         </table>
         </div>
         <div id="center" style="margin-right: 925px;">
@@ -75,10 +67,10 @@
         <table >
             {% for answer in answers %}
                     <tr>
-                        <td style="font-size: 20px; padding-top: 20px" id="message">{{ answer.message }}</td>
+                        <td style=" padding-top: 20px" id="message2">{{ answer.message }}</td>
                     </tr>
                     <tr>
-                    <td class="image"><a href="/static/upload/answers/{{ answer.id }}.png"><img id="image3" src="/static/upload/answers/{{ loop.index }}.png" alt="" width="400"></a></td>
+                    <td class="image"><a href="/static/upload/answer/{{ answer.image }}"><img id="image3" src="/static/upload/answer/{{ answer.image }}" alt="" width="400"></a></td>
                     </tr>
                     <tr style="font-size: 13px">
                         <td>Answered: {{ answer.submission_time }}</td>
@@ -86,7 +78,7 @@
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-up" method="post" style="display: inline-block">
                                 <input type="submit" value="&#8593" name="vote_up">
                             </form>
-                            <span class="number">{{ answer.vote_number }}</span>
+                                <span class="number">{{ answer.vote_number }}</span>
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-down" method="post" style="display: inline-block">
                                 <input type="submit" value="&#8595" name="vote_down">
                             </form>

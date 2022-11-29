@@ -79,6 +79,16 @@ def get_question_id(cursor, time):
 
 
 @database_common.connection_handler
+def get_answer_id_by_time(cursor, time):
+    query = """
+        SELECT id
+        FROM answer
+        WHERE submission_time = %s"""
+    cursor.execute(query, [time])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
 def get_answers_by_question_id(cursor, question_id):
     query = """
                     SELECT *
@@ -90,11 +100,10 @@ def get_answers_by_question_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def update_image(cursor, question_id, image):
-    query = """
-                UPDATE question
-                SET 
-                image = %s
+def update_image(cursor, table, question_id, image):
+    query = f"""
+                UPDATE {table}
+                SET image = %s
                 WHERE id = %s;
                 """
     cursor.execute(query, [image, question_id])
@@ -110,6 +119,12 @@ def increment_view_number(cursor, question_id, table):
                     """
     cursor.execute(query, [question_id])
 
+@database_common.connection_handler
+def new_answer(cursor, time, vote, question_id, message, image):
+    query = """
+        INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+        VALUES (%s, %s, %s, %s, %s)"""
+    cursor.execute(query, [time, vote, question_id, message, image])
 
 
 def save_photo(img, id_index, folder):

@@ -33,7 +33,7 @@ def add_question():
         question_id = data_manager.get_question_id(question_time)[0]['id']
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], question_id, 'question')
-            data_manager.update_image(question_id, f'{question_id}.png')
+            data_manager.update_image('question', question_id, f'{question_id}.png')
         return redirect(f"/question/{question_id}")
     return render_template('add_question.html', title="Add question")
 
@@ -136,7 +136,11 @@ def add_answer(question_id):
         vote = 0
         message = request.form['message']
         image = '1' #Add function
-        data_manager.new_answer(submission_time, vote, {question_id}, message, image)
+        data_manager.new_answer(submission_time, vote, question_id, message, image)
+        answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
+        if request.files["file"]:
+            data_manager.save_photo(request.files["file"], answer_id, 'answer')
+            data_manager.update_image('answer', answer_id, f'{answer_id}.png')
         return redirect(f"/question/{question_id}")
 
     return render_template('add_answer.html',

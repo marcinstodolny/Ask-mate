@@ -104,7 +104,7 @@ def add_answer(question_id):
                                question_id=question_id)
     submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message = request.form['message']
-    data_manager.new_answer(submission_time, 0, question_id, message, '')
+    data_manager.new_answer(submission_time, 0, question_id, message, None)
     answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], answer_id, 'answer')

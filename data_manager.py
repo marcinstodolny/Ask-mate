@@ -245,3 +245,14 @@ def remove_files(cursor, question_id):
     for item in answer:
         if os.path.exists(f"{answer_way}\\{item['image']}"):
             os.remove(f"{answer_way}\\{item['image']}")
+
+
+@database_common.connection_handler
+def update_question_time(cursor, time, question_id):
+    query = """
+                UPDATE question
+                SET submission_time = %s
+                WHERE id = %s;
+                """
+    cursor.execute(query, [time, question_id])
+

@@ -131,6 +131,14 @@ def edit_answer(answer_id):
         data_manager.update_image(answer_id, f'{answer_id}.png')
     return redirect(f"/question/{answer['question_id']}")
 
+@app.route('/search', methods=['POST'])
+def searching():
+    if request.method == 'POST':
+        search_phrases = request.form.get('q')
+        all_questions = data_manager.search_questions(search_phrases)
+        return render_template('index.html', questions=all_questions)
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

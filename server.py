@@ -70,7 +70,7 @@ def up_vote(question_id):
 
 @app.route("/answer/<answer_id>/<question_id>/vote-up", methods=["POST"])
 def answer_up_vote(answer_id, question_id):
-    data_manager.increment_vote_number(question_id, 'answer')
+    data_manager.increment_vote_number(answer_id, 'answer')
     return redirect(f"/question/{question_id}")
 
 
@@ -82,7 +82,7 @@ def down_vote(question_id):
 
 @app.route("/answer/<answer_id>/<question_id>/vote-down", methods=["POST"])
 def answer_down_vote(answer_id, question_id):
-    data_manager.increment_vote_number(question_id, 'answer')
+    data_manager.decrement_vote_number(answer_id, 'answer')
     return redirect(f"/question/{question_id}")
 
 
@@ -107,10 +107,8 @@ def sort_list(table, sort_by='submission_time', order_direction='DESC'):
 def add_answer(question_id):
     if request.method == 'POST':
         submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        vote = 0
         message = request.form['message']
-        image = '1' #Add function
-        data_manager.new_answer(submission_time, vote, question_id, message, image)
+        data_manager.new_answer(submission_time, 0, question_id, message, '')
         answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], answer_id, 'answer')

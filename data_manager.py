@@ -93,7 +93,8 @@ def get_answers_by_question_id(cursor, question_id):
     query = """
                     SELECT *
                     FROM answer
-                    where question_id = %s
+                    WHERE question_id = %s
+                    ORDER BY vote_number DESC
                     """
     cursor.execute(query, [question_id])
     return cursor.fetchall()

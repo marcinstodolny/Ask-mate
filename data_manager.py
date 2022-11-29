@@ -181,16 +181,6 @@ def new_comment(cursor, time, message, edited_count, question_id=None, answer_id
 
 
 @database_common.connection_handler
-def update_question_time(cursor, time, question_id):
-    query = """
-                UPDATE question
-                SET submission_time = %s
-                WHERE id = %s;
-                """
-    cursor.execute(query, [time, question_id])
-
-
-@database_common.connection_handler
 def delete_answer(cursor, answer_id):
     query = """
         DELETE FROM answer
@@ -208,6 +198,26 @@ def remove_photo(id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
+
+@database_common.connection_handler
+def update_answer(cursor, answer_id, message):
+    query = """
+                UPDATE answer
+                SET 
+                message = %s
+                WHERE id = %s;
+                """
+    cursor.execute(query, [message, answer_id])
+
+@database_common.connection_handler
+def get_answer_by_id(cursor, answer_id):
+    query = """
+                SELECT *
+                FROM answer
+                where id = %s
+                """
+    cursor.execute(query, [answer_id])
+    return cursor.fetchall()
 
 
 @database_common.connection_handler
@@ -235,3 +245,14 @@ def remove_files(cursor, question_id):
     for item in answer:
         if os.path.exists(f"{answer_way}\\{item['image']}"):
             os.remove(f"{answer_way}\\{item['image']}")
+
+
+@database_common.connection_handler
+def update_question_time(cursor, time, question_id):
+    query = """
+                UPDATE question
+                SET submission_time = %s
+                WHERE id = %s;
+                """
+    cursor.execute(query, [time, question_id])
+

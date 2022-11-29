@@ -188,6 +188,18 @@ def delete_answer(cursor, answer_id):
     cursor.execute(query, [answer_id])
 
 
+@database_common.connection_handler
+def search_questions(cursor, sentence):
+    searching_phrase = f"%{sentence}%"
+    query = """
+        SELECT DISTINCT question.id, question.title, question.submission_time, question.view_number, question.vote_number
+        FROM question
+        FULL OUTER JOIN answer ON question.id = answer.question_id
+        WHERE title LIKE %s or question.message LIKE %s or answer.message LIKE %s"""
+    cursor.execute(query, [searching_phrase, searching_phrase, searching_phrase])
+    return cursor.fetchall()
+
+
 def save_photo(img, id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     img.save(f"{way}\\{id_index}.png")

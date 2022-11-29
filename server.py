@@ -100,7 +100,7 @@ def sort_list(table, sort_by='submission_time', order_direction='DESC'):
 def add_answer(question_id):
     if request.method != 'POST':
         return render_template('add_answer.html',
-                               title="Addd answer",
+                               title="Add answer",
                                question_id=question_id)
     submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message = request.form['message']

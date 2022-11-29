@@ -104,7 +104,7 @@ def add_answer(question_id):
                                question_id=question_id)
     submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     message = request.form['message']
-    data_manager.new_answer(submission_time, 0, question_id, message, '')
+    data_manager.new_answer(submission_time, 0, question_id, message, None)
     answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], answer_id, 'answer')
@@ -130,6 +130,22 @@ def edit_answer(answer_id):
         data_manager.save_photo(request.files["file"], answer_id, 'answer')
         data_manager.update_image(answer_id, f'{answer_id}.png')
     return redirect(f"/question/{answer['question_id']}")
+
+@app.route('/search', methods=['POST'])
+def searching():
+    if request.method == 'POST':
+        search_phrases = request.form.get('q')
+        all_questions = data_manager.search_questions(search_phrases)
+        return render_template('index.html', questions=all_questions)
+
+
+@app.route('/search', methods=['POST'])
+def searching():
+    if request.method == 'POST':
+        search_phrases = request.form.get('q')
+        all_questions = data_manager.search_questions(search_phrases)
+        return render_template('index.html', questions=all_questions)
+
 
 if __name__ == '__main__':
     app.run(

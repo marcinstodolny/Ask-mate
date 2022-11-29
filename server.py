@@ -128,8 +128,9 @@ def edit_answer(answer_id):
     data_manager.update_answer(answer_id, request.form['message'])
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], answer_id, 'answer')
-        data_manager.update_image(answer_id, f'{answer_id}.png')
+        data_manager.update_image('answer' ,answer_id, f'{answer_id}.png')
     return redirect(f"/question/{answer['question_id']}")
+
 
 if __name__ == '__main__':
     app.run(

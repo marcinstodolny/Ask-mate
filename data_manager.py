@@ -199,7 +199,6 @@ def remove_photo(id_index, folder):
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
 
-
 @database_common.connection_handler
 def update_answer(cursor, answer_id, message):
     query = """
@@ -219,3 +218,30 @@ def get_answer_by_id(cursor, answer_id):
                 """
     cursor.execute(query, [answer_id])
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def remove_files(cursor, question_id):
+    print(question_id)
+    query = """
+            SELECT image
+            FROM question
+            WHERE id = %s;
+            """
+    cursor.execute(query, [question_id])
+    question = cursor.fetchall()
+    query = """
+                SELECT image
+                FROM  answer
+                WHERE question_id = %s;
+                """
+    cursor.execute(query, [question_id])
+    answer = cursor.fetchall()
+    question_way = (os.path.abspath(f"static\\upload\\question\\"))
+    answer_way = (os.path.abspath(f"static\\upload\\answer\\"))
+    for item in question:
+        if os.path.exists(f"{question_way}\\{item['image']}"):
+            os.remove(f"{question_way}\\{item['image']}")
+    for item in answer:
+        if os.path.exists(f"{answer_way}\\{item['image']}"):
+            os.remove(f"{answer_way}\\{item['image']}")

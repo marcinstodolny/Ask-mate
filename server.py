@@ -36,7 +36,7 @@ def add_question():
         question_id = data_manager.get_question_id(question_time)[0]['id']
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], question_id, 'question')
-            data_manager.update_image(question_id, f'{question_id}.png')
+            data_manager.update_image('question', question_id, f'{question_id}.png')
         return redirect(f"/question/{question_id}")
     return render_template('add_question.html', title="Add question")
 
@@ -105,13 +105,18 @@ def sort_list(table, sort_by='submission_time', order_direction='DESC'):
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):
-    all_answers = data_manager.get_all_data_from_file("answers.csv")
     if request.method == 'POST':
-        new_answer = util.set_new_values(ANSWER_INDEX, all_answers, 6, question_id)
-        new_answer[ANSWER_INDEX["message"]] = request.form['message']
-        new_answer[ANSWER_INDEX["image"]] = data_manager.save_photo(request.files["file"], len(all_answers), "answers")
-        data_manager.write_file("answers.csv", all_answers, new_answer)
+        submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        vote = 0
+        message = request.form['message']
+        image = '1' #Add function
+        data_manager.new_answer(submission_time, vote, question_id, message, image)
+        answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
+        if request.files["file"]:
+            data_manager.save_photo(request.files["file"], answer_id, 'answer')
+            data_manager.update_image('answer', answer_id, f'{answer_id}.png')
         return redirect(f"/question/{question_id}")
+
     return render_template('add_answer.html',
                            title="Add answer",
                            question_id=question_id)

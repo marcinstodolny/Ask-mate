@@ -198,3 +198,24 @@ def remove_photo(id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
+
+
+@database_common.connection_handler
+def update_answer(cursor, answer_id, message):
+    query = """
+                UPDATE answer
+                SET 
+                message = %s
+                WHERE id = %s;
+                """
+    cursor.execute(query, [message, answer_id])
+
+@database_common.connection_handler
+def get_answer_by_id(cursor, answer_id):
+    query = """
+                SELECT *
+                FROM answer
+                where id = %s
+                """
+    cursor.execute(query, [answer_id])
+    return cursor.fetchall()

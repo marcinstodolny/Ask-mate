@@ -84,6 +84,11 @@
                             </form>
                         </td>
                         <td>
+                            <form action="/answer/{{ answer.id }}/edit" method="get">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td>
                             <form action="/answer/{{ answer.id }}/delete" method="post">
                                 <button type="submit">Delete</button>
                             </form>

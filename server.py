@@ -137,12 +137,11 @@ def edit_answer(answer_id):
     return redirect(f"/question/{answer['question_id']}")
 
 
-@app.route('/search', methods=['POST'])
+@app.route('/search')
 def searching():
-    if request.method == 'POST':
-        search_phrases = request.form.get('q')
-        all_questions = data_manager.search_questions(search_phrases)
-        return render_template('index.html', questions=all_questions)
+    search_phrases = request.args.get('q')
+    questions = data_manager.search_questions(search_phrases)
+    return render_template('index.html', questions=questions)
 
 
 if __name__ == '__main__':

@@ -66,7 +66,7 @@
         </table>
         </div>
         <div id="center" style="margin-right: 925px;">
-                <form action="/question/{{ question_id }}/new-comment">
+                <form action="/question/{{ question.id }}/new-comment">
                     <input type="submit" value="Add comment" name="comment">
                 </form>
         </div>
@@ -105,7 +105,7 @@
         </div>
         <footer id="center">
             <div style="margin-right: 925px;"><br><br>
-            <form action="/question/{{ question_id }}/new-answer">
+            <form action="/question/{{ question.id }}/new-answer">
                 <input type="submit" value="Add answer" name="answer">
             </form><br>
                 <a href="/"> Back to main page </a><br><br>

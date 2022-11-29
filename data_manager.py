@@ -17,7 +17,7 @@ import database_common
 #     return cursor.fetchall()
 @database_common.connection_handler
 def get_all_question_data(cursor, table):
-    query = f"""
+    query = """
             SELECT *
             FROM {table}
             """
@@ -110,6 +110,12 @@ def increment_view_number(cursor, question_id, table):
                     """
     cursor.execute(query, [question_id])
 
+@database_common.connection_handler
+def new_answer(cursor, time, vote, question_id, message, image):
+    query = """
+        INSERT INTO answer (submission_time, vote_number, question_id, message, image)
+        VALUES (%(t)s, %(v)s, %(i)s, %(m)s, %(p)s);"""
+    cursor.execute(query, {'t': time, 'v': vote, 'i': question_id, 'm': message, 'p': image})
 
 
 def save_photo(img, id_index, folder):

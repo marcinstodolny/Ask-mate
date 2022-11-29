@@ -101,6 +101,16 @@ def get_answers_by_question_id(cursor, question_id):
 
 
 @database_common.connection_handler
+def get_question_id_by_answer_id(cursor, answer_id):
+    query = """
+        SELECT question_id
+        FROM answer
+        WHERE id = %s"""
+    cursor.execute(query, [answer_id])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
 def update_image(cursor, table, question_id, image):
     query = f"""
                 UPDATE {table}
@@ -160,6 +170,14 @@ def get_sorted_data(cursor, table, sort_by, order_by):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def delete_answer(cursor, answer_id):
+    query = """
+        DELETE FROM answer
+        WHERE id = %s"""
+    cursor.execute(query, [answer_id])
+
+
 def save_photo(img, id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     img.save(f"{way}\\{id_index}.png")
@@ -176,8 +194,7 @@ def remove_question_answers(header, question_id, all_answers):
     return all_answers
 
 
-def remove_photo(all_questions, id_index, way):
-    if os.path.exists(f"{way}\\{id_index + 1}.png"):
-        os.remove(f"{way}\\{id_index + 1}.png")
-    all_questions.pop(id_index)
-    return all_questions
+def remove_photo(id_index, folder):
+    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
+    if os.path.exists(f"{way}\\{id_index}.png"):
+        os.remove(f"{way}\\{id_index}.png")

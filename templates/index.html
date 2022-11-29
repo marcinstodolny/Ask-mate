@@ -26,18 +26,18 @@
             <button type="submit">Add new question</button>
             <span style="margin-left: 50px"></span>
         </form>
-        <form action="/list/sort" method="post" style="display: inline-block">
+        <form action="/" method="post" style="display: inline-block">
             <label for="sort_by">Sort by:</label>
             <select name="sort_by" id="sort_by">
               <option value="title" {% if sort == "title" %} selected {% endif %}>Title</option>
-              <option value="submission time" {% if sort == "submission time" %} selected {% endif %}>Submission time</option>
-              <option value="view number" {% if sort == "view number" %} selected {% endif %}>View number</option>
-              <option value="vote number" {% if sort == "vote number" %} selected {% endif %}>Vote number</option>
+              <option value="submission_time" {% if sort == "submission_time" %} selected {% endif %}>Submission time</option>
+              <option value="view_number" {% if sort == "view_number" %} selected {% endif %}>View number</option>
+              <option value="vote_number" {% if sort == "vote_number" %} selected {% endif %}>Vote number</option>
             </select>
             <label for="order_by">Order by:</label>
             <select name="order_by" id="order_by">
-              <option value="ascending" {% if order == "ascending" %} selected {% endif %}>Ascending</option>
-              <option value="descending" {% if order == "descending" %} selected {% endif %}>Descending</option>
+              <option value="ASC" {% if order == "ASC" %} selected {% endif %}>Ascending</option>
+              <option value="DESC" {% if order == "DESC" %} selected {% endif %}>Descending</option>
             </select>
             <input type="submit" value="Sort" name="sort">
         </form><br><br>

@@ -7,20 +7,23 @@ import os
 app = Flask(__name__)
 
 
-QUESTION_HEADER = ['ID', 'Title', 'Submission time', 'View number', 'Vote number', 'Message', 'Image']
-
-
-@app.route("/")
+@app.route("/", methods=['POST', 'GET'])
 @app.route("/list")
 def main_page():
-    all_questions = data_manager.get_all_question_data('question')[::-1]
-    return render_template('index.html', questions=all_questions,)
+    sort_by = request.form.get('sort_by')
+    order_by = request.form.get('order_by')
+    if sort_by is None:
+        all_questions = sort_list('question')
+    else:
+        all_questions = sort_list('question', sort_by, order_by)
+    return render_template('index.html', questions=all_questions, sort=sort_by, order=order_by)
 
 
 @app.route("/question/<question_id>")
 def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     answers = data_manager.get_answers_by_question_id(question_id)
+    question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']
     data_manager.increment_view_number(question_id, 'question')
     return render_template('question.html', question=question, answers=answers)
 
@@ -40,13 +43,13 @@ def add_question():
 
 @app.route("/question/<question_id>/edit", methods=['GET', 'POST'])
 def edit_question(question_id):
-    question = data_manager.get_question_by_id(question_id)[0]
     if request.method == 'POST':
         data_manager.update_question(question_id, request.form['title'], request.form['message'])
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], question_id, 'question')
             data_manager.update_image(question_id, f'{question_id}.png')
         return redirect(f"/question/{question_id}")
+    question = data_manager.get_question_by_id(question_id)[0]
     return render_template('edit_question.html',
                            title="Edit question",
                            question=question)
@@ -61,41 +64,25 @@ def delete_question(question_id):
 
 @app.route("/question/<question_id>/vote-up", methods=["POST"])
 def up_vote(question_id):
-    index = int(question_id) - 1
-    all_questions = data_manager.get_all_data_from_file("questions.csv")
-    all_questions[index][HEADERS_INDEX["vote number"]] = int(
-        all_questions[index][HEADERS_INDEX["vote number"]]) + 1
-    data_manager.write_file("questions.csv", all_questions)
+    data_manager.increment_vote_number(question_id, 'question')
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/answer/<answer_id>/<question_id>/vote-up", methods=["POST"])
 def answer_up_vote(answer_id, question_id):
-    index = int(answer_id) - 1
-    all_answers = data_manager.get_all_data_from_file("answers.csv")
-    all_answers[index][ANSWER_INDEX["vote number"]] = int(
-        all_answers[index][ANSWER_INDEX["vote number"]]) + 1
-    data_manager.write_file("answers.csv", all_answers)
+    data_manager.increment_vote_number(question_id, 'answer')
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/question/<question_id>/vote-down", methods=["POST"])
 def down_vote(question_id):
-    index = int(question_id) - 1
-    all_questions = data_manager.get_all_data_from_file("questions.csv")
-    all_questions[index][HEADERS_INDEX["vote number"]] = int(
-        all_questions[index][HEADERS_INDEX["vote number"]]) - 1
-    data_manager.write_file("questions.csv", all_questions)
+    data_manager.decrement_vote_number(question_id, 'question')
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/answer/<answer_id>/<question_id>/vote-down", methods=["POST"])
 def answer_down_vote(answer_id, question_id):
-    index = int(answer_id) - 1
-    all_answers = data_manager.get_all_data_from_file("answers.csv")
-    all_answers[index][ANSWER_INDEX["vote number"]] = int(
-        all_answers[index][ANSWER_INDEX["vote number"]]) - 1
-    data_manager.write_file("answers.csv", all_answers)
+    data_manager.increment_vote_number(question_id, 'answer')
     return redirect(f"/question/{question_id}")
 
 
@@ -112,21 +99,8 @@ def add_comment_to_question(question_id):
                            question_id=question_id)
 
 
-@app.route("/list/sort", methods=["POST"])
-def sort_list():
-    sort_by = request.form.get('sort_by')
-    order_direction = request.form.get('order_by')
-    all_questions = data_manager.get_all_data_from_file("questions.csv")
-    all_questions = util.convert_elements(all_questions, HEADERS_INDEX)
-    sort_by_index = HEADERS_INDEX[sort_by]
-    if order_direction == "descending":
-        all_questions.sort(key=lambda x: x[sort_by_index], reverse=True)
-    elif order_direction == "ascending":
-        all_questions.sort(key=lambda x: x[sort_by_index])
-    for item in all_questions:
-        date = datetime.date.fromtimestamp(int(item[2]))
-        item[2] = f"{date.day}-{date.month}-{date.year}"
-    return render_template('index.html', all_questions=all_questions, QUESTION_HEADER=QUESTION_HEADER, sort=sort_by, order=order_direction)
+def sort_list(table, sort_by='submission_time', order_direction='DESC'):
+    return data_manager.get_sorted_data(table, sort_by, order_direction)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])

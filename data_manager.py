@@ -111,6 +111,38 @@ def increment_view_number(cursor, question_id, table):
     cursor.execute(query, [question_id])
 
 
+@database_common.connection_handler
+def increment_vote_number(cursor, question_id, table):
+    query = f"""
+                        UPDATE {table}
+                        SET 
+                        vote_number = vote_number + 1
+                        WHERE id = %s;
+                        """
+    cursor.execute(query, [question_id])
+
+
+@database_common.connection_handler
+def decrement_vote_number(cursor, question_id, table):
+    query = f"""
+                        UPDATE {table}
+                        SET 
+                        vote_number = vote_number - 1
+                        WHERE id = %s;
+                        """
+    cursor.execute(query, [question_id])
+
+
+@database_common.connection_handler
+def get_sorted_data(cursor, table, sort_by, order_by):
+    query = f"""
+            SELECT *
+            FROM {table}
+            ORDER BY {sort_by} {order_by};
+            """
+    cursor.execute(query)
+    return cursor.fetchall()
+
 
 def save_photo(img, id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))

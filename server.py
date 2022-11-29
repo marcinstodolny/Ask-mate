@@ -122,15 +122,10 @@ def add_answer(question_id):
 
 @app.route('/answer/<answer_id>/delete', methods=['GET', 'POST'])
 def delete_answer(answer_id):
-    id_index = int(answer_id) - 1
     if request.method == 'POST':
-        all_answers = data_manager.get_all_data_from_file("answers.csv")
-        question_id = int(all_answers[id_index][ANSWER_INDEX['question id']])
-        all_answers.pop(id_index)
-        if os.path.exists(f"{A_WAY}\\{id_index + 1}.png"):
-            os.remove(f"{A_WAY}\\{id_index + 1}.png")
-        data_manager.reindex_items(all_answers, id_index, ANSWER_INDEX, A_WAY)
-        data_manager.write_file("answers.csv", all_answers)
+        question_id = data_manager.get_question_id_by_answer_id(answer_id)
+        data_manager.delete_answer(answer_id)
+        data_manager.remove_photo(answer_id, 'answer')
         return redirect(f"/question/{question_id}")
 
 

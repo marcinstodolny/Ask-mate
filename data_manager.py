@@ -26,6 +26,16 @@ def get_all_question_data(cursor, table):
 
 
 @database_common.connection_handler
+def get_last_five_questions(cursor):
+    query = """
+        SELECT *
+        FROM question
+        ORDER BY submission_time DESC
+        LIMIT 5"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@database_common.connection_handler
 def add_new_question(cursor, submission_time, view_number, vote_number, title, message, image):
     query = """
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image)

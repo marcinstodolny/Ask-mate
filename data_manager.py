@@ -60,7 +60,7 @@ def get_question_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def get_question_id(cursor, time):
+def get_question_id_by_time(cursor, time):
     query = """
                 SELECT id
                 FROM question

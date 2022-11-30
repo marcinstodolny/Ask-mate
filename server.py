@@ -36,7 +36,7 @@ def add_question():
         return render_template('add_question.html', title="Add question")
     question_time = datetime.datetime.now()
     data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
-    question_id = data_manager.get_question_id(question_time)[0]['id']
+    question_id = data_manager.get_question_id_by_time(question_time)[0]['id']
     data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], question_id, 'question')
@@ -100,6 +100,7 @@ def delete_comment(comment_id):
         question_id = data_manager.get_question_id_by_comment_id(comment_id)[0]['question_id']
         data_manager.delete_comment(comment_id)
         return redirect(f'/question/{question_id}')
+
 
 def sort_list(sort_by='submission_time', order_direction='DESC', limit=''):
     return data_manager.get_sorted_data(sort_by, order_direction, limit)

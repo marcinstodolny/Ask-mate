@@ -299,8 +299,9 @@ def update_comment(cursor, comment_id, message, time):
     query = """
                 UPDATE comment
                 SET 
-                message = %s
-                submission_time = %s
+                message = %s,
+                submission_time = %s,
+                edited_count = edited_count + 1
                 WHERE id = %s;
                 """
     cursor.execute(query, [message, time, comment_id])

@@ -94,6 +94,13 @@ def add_comment(question_id=None, answer_id=None):
     return render_template('add_comment.html', title="Add comment", question_id=question_id)
 
 
+@app.route('/comments/<comment_id>/delete', methods=['POST'])
+def delete_comment(comment_id):
+    if request.method == 'POST':
+        question_id = data_manager.get_question_id_by_comment_id(comment_id)[0]['question_id']
+        data_manager.delete_comment(comment_id)
+        return redirect(f'/question/{question_id}')
+
 def sort_list(sort_by='submission_time', order_direction='DESC', limit=''):
     return data_manager.get_sorted_data(sort_by, order_direction, limit)
 

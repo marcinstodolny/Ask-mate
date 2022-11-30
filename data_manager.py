@@ -103,6 +103,24 @@ def get_question_id_by_answer_id(cursor, answer_id):
 
 
 @database_common.connection_handler
+def get_question_id_by_comment_id(cursor, comment_id):
+    query = """
+        SELECT question_id
+        FROM comment
+        WHERE id = %s"""
+    cursor.execute(query, [comment_id])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def delete_comment(cursor, comment_id):
+    query = """
+        DELETE FROM comment
+        WHERE id = %s"""
+    cursor.execute(query, [comment_id])
+
+
+@database_common.connection_handler
 def update_image(cursor, table, question_id, image):
     query = f"""
                 UPDATE {table}

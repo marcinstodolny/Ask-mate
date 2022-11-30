@@ -153,8 +153,8 @@ def searching():
 def new_tag(question_id):
     if request.method == 'POST':
         data_manager.add_new_tag(request.form['message'])
-        return redirect(f'/question/{question_id}')
-    return render_template('add_tag.html', title="Add new tag")
+        return redirect(f"/question/{question_id}")
+    return render_template('add_tag.html', title="Add new tag", question_id=question_id)
 
 
 if __name__ == '__main__':

@@ -125,6 +125,7 @@ def delete_answer(answer_id):
         data_manager.remove_photo(answer_id, 'answer')
         return redirect(f"/question/{question_id}")
 
+
 @app.route('/answer/<answer_id>/edit', methods=['GET','POST'])
 def edit_answer(answer_id):
     answer = data_manager.get_answer_by_id(answer_id)[0]
@@ -133,7 +134,7 @@ def edit_answer(answer_id):
     data_manager.update_answer(answer_id, request.form['message'])
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], answer_id, 'answer')
-        data_manager.update_image(answer_id, f'{answer_id}.png')
+        data_manager.update_image('answer', answer_id, f'{answer_id}.png')
     return redirect(f"/question/{answer['question_id']}")
 
 

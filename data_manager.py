@@ -257,3 +257,10 @@ def update_question_time(cursor, time, question_id):
                 """
     cursor.execute(query, [time, question_id])
 
+
+@database_common.connection_handler
+def add_new_tag(cursor, tag_name):
+    query = """
+        INSERT INTO tag (name)
+        VALUES (%s)"""
+    cursor.execute(query, [tag_name])

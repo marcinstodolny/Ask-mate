@@ -142,6 +142,14 @@ def searching():
     return render_template('index.html', questions=questions)
 
 
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def new_tag(question_id):
+    if request.method == 'POST':
+        data_manager.add_new_tag(request.form['message'])
+        return redirect(f'/question/{question_id}')
+    return render_template('add_tag.html', title="Add new tag")
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

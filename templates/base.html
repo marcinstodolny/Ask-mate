@@ -21,7 +21,7 @@
         <label>
             <textarea name="message" cols="30" rows="5" required>{% block message %}{% endblock %}</textarea>
         </label><br><br>
-            <input type="file" name="file" id="file">
+            {% block add_file %}{% endblock %}
             <br><br>
         <button type="submit">{% block button %}{% endblock %}</button>
     </form>

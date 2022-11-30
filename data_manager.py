@@ -103,6 +103,24 @@ def get_question_id_by_answer_id(cursor, answer_id):
 
 
 @database_common.connection_handler
+def get_question_id_by_comment_id(cursor, comment_id):
+    query = """
+        SELECT question_id
+        FROM comment
+        WHERE id = %s"""
+    cursor.execute(query, [comment_id])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def delete_comment(cursor, comment_id):
+    query = """
+        DELETE FROM comment
+        WHERE id = %s"""
+    cursor.execute(query, [comment_id])
+
+
+@database_common.connection_handler
 def update_image(cursor, table, question_id, image):
     query = f"""
                 UPDATE {table}
@@ -193,17 +211,6 @@ def search_questions(cursor, sentence):
     return cursor.fetchall()
 
 
-def save_photo(img, id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\"))
-    img.save(f"{way}\\{folder}\\{id_index}.png")
-
-
-def remove_photo(id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
-    if os.path.exists(f"{way}\\{id_index}.png"):
-        os.remove(f"{way}\\{id_index}.png")
-
-
 @database_common.connection_handler
 def update_answer(cursor, answer_id, message):
     query = """
@@ -256,6 +263,26 @@ def update_question_time(cursor, time, question_id):
                 WHERE id = %s;
                 """
     cursor.execute(query, [time, question_id])
+
+
+@database_common.connection_handler
+def add_new_tag(cursor, tag_name):
+    query = """
+        INSERT INTO tag (name)
+        VALUES (%s)"""
+    cursor.execute(query, [tag_name])
+
+
+def save_photo(img, id_index, folder):
+    way = (os.path.abspath(f"static\\upload\\"))
+    img.save(f"{way}\\{folder}\\{id_index}.png")
+
+
+def remove_photo(id_index, folder):
+    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
+    if os.path.exists(f"{way}\\{id_index}.png"):
+        os.remove(f"{way}\\{id_index}.png")
+
 
 @database_common.connection_handler
 def get_comment_by_id(cursor, comment_id):

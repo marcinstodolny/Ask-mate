@@ -8,24 +8,16 @@ app = Flask(__name__)
 
 @app.route("/list", methods=['POST', 'GET'])
 def all_questions():
-    sort_by = request.form.get('sort_by')
-    order_by = request.form.get('order_by')
-    if sort_by is None:
-        questions = sort_list()
-    else:
-        questions = sort_list(sort_by, order_by)
-    return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/list")
+    sort_by = request.args.get('sort_by')
+    order_by = request.args.get('order_by')
+    questions = sort_list() if sort_by is None else sort_list(sort_by, order_by)
+    return render_template('index.html', questions=questions, sort=sort_by, order=order_by)
 
 
 @app.route("/", methods=['POST', 'GET'])
 def main_page():
-    sort_by = request.form.get('sort_by')
-    order_by = request.form.get('order_by')
-    if sort_by is None:
-        questions = sort_list(limit='LIMIT 5')
-    else:
-        questions = sort_list(sort_by, order_by, 'LIMIT 5')
-    return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/")
+    questions = sort_list(limit='LIMIT 5')
+    return render_template('index.html', questions=questions)
 
 
 @app.route("/question/<question_id>")
@@ -44,7 +36,7 @@ def add_question():
         return render_template('add_question.html', title="Add question")
     question_time = datetime.datetime.now()
     data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
-    question_id = data_manager.get_question_id(question_time)[0]['id']
+    question_id = data_manager.get_question_id_by_time(question_time)[0]['id']
     data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], question_id, 'question')
@@ -67,7 +59,7 @@ def edit_question(question_id):
 @app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
     if request.method == 'POST':
-        data_manager.remove_files(question_id)
+        data_manager.remove_images(question_id)
         data_manager.delete_question(question_id)
         return redirect('/')
 
@@ -100,6 +92,14 @@ def add_comment(question_id=None, answer_id=None):
         data_manager.new_comment(submission_time, request.form['message'], 0, question_id=question_id, answer_id=answer_id)
         return redirect(f"/question/{question_id}")
     return render_template('add_comment.html', title="Add comment", question_id=question_id)
+
+
+@app.route('/comments/<comment_id>/delete', methods=['POST'])
+def delete_comment(comment_id):
+    if request.method == 'POST':
+        question_id = data_manager.get_question_id_by_comment_id(comment_id)[0]['question_id']
+        data_manager.delete_comment(comment_id)
+        return redirect(f'/question/{question_id}')
 
 
 def sort_list(sort_by='submission_time', order_direction='DESC', limit=''):
@@ -149,6 +149,13 @@ def searching():
     questions = data_manager.search_questions(search_phrases)
     return render_template('index.html', questions=questions)
 
+
+@app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
+def new_tag(question_id):
+    if request.method == 'POST':
+        data_manager.add_new_tag(request.form['message'])
+        return redirect(f"/question/{question_id}")
+    return render_template('add_tag.html', title="Add new tag", question_id=question_id)
 
 @app.route('/comment/<comment_id>/edit', methods=['GET','POST'])
 def edit_comment(comment_id):

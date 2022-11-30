@@ -15,25 +15,7 @@ import database_common
 #             """
 #     cursor.execute(query, {'table': table})
 #     return cursor.fetchall()
-@database_common.connection_handler
-def get_all_question_data(cursor, table):
-    query = f"""
-            SELECT *
-            FROM {table}
-            """
-    cursor.execute(query)
-    return cursor.fetchall()
 
-
-@database_common.connection_handler
-def get_last_five_questions(cursor):
-    query = """
-        SELECT *
-        FROM question
-        ORDER BY submission_time DESC
-        LIMIT 5"""
-    cursor.execute(query)
-    return cursor.fetchall()
 
 @database_common.connection_handler
 def add_new_question(cursor, submission_time, view_number, vote_number, title, message, image):
@@ -160,11 +142,12 @@ def change_vote_number(cursor, question_id, table, number):
 
 
 @database_common.connection_handler
-def get_sorted_data(cursor, table, sort_by, order_by):
+def get_sorted_data(cursor, table, sort_by, order_by, limit=1000):
     query = f"""
             SELECT *
             FROM {table}
-            ORDER BY {sort_by} {order_by};
+            ORDER BY {sort_by} {order_by}
+            LIMIT {limit};
             """
     cursor.execute(query)
     return cursor.fetchall()
@@ -221,6 +204,7 @@ def remove_photo(id_index, folder):
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
 
+
 @database_common.connection_handler
 def update_answer(cursor, answer_id, message):
     query = """
@@ -230,6 +214,7 @@ def update_answer(cursor, answer_id, message):
                 WHERE id = %s;
                 """
     cursor.execute(query, [message, answer_id])
+
 
 @database_common.connection_handler
 def get_answer_by_id(cursor, answer_id):

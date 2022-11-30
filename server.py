@@ -6,7 +6,7 @@ import time
 app = Flask(__name__)
 
 
-@app.route("/list")
+@app.route("/list", methods=['POST', 'GET'])
 def all_questions():
     sort_by = request.form.get('sort_by')
     order_by = request.form.get('order_by')
@@ -14,13 +14,18 @@ def all_questions():
         questions = sort_list('question')
     else:
         questions = sort_list('question', sort_by, order_by)
-    return render_template('index.html', questions=questions, sort=sort_by, order=order_by)
+    return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/list")
 
 
 @app.route("/", methods=['POST', 'GET'])
 def main_page():
-    questions = data_manager.get_last_five_questions()
-    return render_template('index.html', questions=questions)
+    sort_by = request.form.get('sort_by')
+    order_by = request.form.get('order_by')
+    if sort_by is None:
+        questions = sort_list('question', limit=5)
+    else:
+        questions = sort_list('question', sort_by, order_by, limit=5)
+    return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/")
 
 
 @app.route("/question/<question_id>")
@@ -97,9 +102,11 @@ def add_comment(question_id=None, answer_id=None):
     return render_template('add_comment.html', title="Add comment", question_id=question_id)
 
 
-def sort_list(table, sort_by='submission_time', order_direction='DESC'):
-    return data_manager.get_sorted_data(table, sort_by, order_direction)
-
+def sort_list(table, sort_by='submission_time', order_direction='DESC', limit=None):
+    if limit:
+        return data_manager.get_sorted_data(table, sort_by, order_direction, limit)
+    else:
+        return data_manager.get_sorted_data(table, sort_by, order_direction)
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):

@@ -60,7 +60,7 @@ def get_question_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def get_question_id_by_time(cursor, time):
+def get_question_id(cursor, time):
     query = """
                 SELECT id
                 FROM question
@@ -234,7 +234,7 @@ def get_answer_by_id(cursor, answer_id):
 
 
 @database_common.connection_handler
-def remove_images(cursor, question_id):
+def remove_files(cursor, question_id):
     query = """
             SELECT image
             FROM question
@@ -250,9 +250,9 @@ def remove_images(cursor, question_id):
     cursor.execute(query, [question_id])
     answer = cursor.fetchall()
     way = (os.path.abspath(f"static\\upload\\"))
-    for image in (question + answer):
-        if os.path.exists(f"{way}\\{image['image']}"):
-            os.remove(f"{way}\\{image['image']}")
+    for item in (question + answer):
+        if os.path.exists(f"{way}\\{item['image']}"):
+            os.remove(f"{way}\\{item['image']}")
 
 
 @database_common.connection_handler
@@ -282,3 +282,25 @@ def remove_photo(id_index, folder):
     way = (os.path.abspath(f"static\\upload\\{folder}\\"))
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
+
+
+@database_common.connection_handler
+def get_comment_by_id(cursor, comment_id):
+    query = """
+                SELECT *
+                FROM comment
+                where id = %s
+                """
+    cursor.execute(query, [comment_id])
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def update_comment(cursor, comment_id, message, time):
+    query = """
+                UPDATE comment
+                SET 
+                message = %s
+                submission_time = %s
+                WHERE id = %s;
+                """
+    cursor.execute(query, [message, time, comment_id])

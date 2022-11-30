@@ -26,7 +26,7 @@ def display_question(question_id):
     answers = data_manager.get_answers_by_question_id(question_id)
     comments = data_manager.get_comments_by_question_id(question_id)
     question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']
-    data_manager.increment_view_number(question_id, 'question')
+    data_manager.increment_view_number(question_id)
     return render_template('question.html', question=question, answers=answers, comments=comments)
 
 
@@ -157,7 +157,8 @@ def new_tag(question_id):
         return redirect(f"/question/{question_id}")
     return render_template('add_tag.html', title="Add new tag", question_id=question_id)
 
-@app.route('/comment/<comment_id>/edit', methods=['GET','POST'])
+
+@app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])
 def edit_comment(comment_id):
     comment = data_manager.get_comment_by_id(comment_id)[0]
     if request.method != 'POST':

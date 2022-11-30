@@ -39,7 +39,7 @@
         </div><br>
         <div id="center">
             <p id="message">{{ question.message }}</p>
-            <img src="/static/upload/question/{{ question.id }}.png" alt="" width="800">
+            <img src="/static/upload/{{ question.image }}" alt="" width="800">
             <table>
             {% for comment in comments %}
                     <tr>
@@ -70,7 +70,7 @@
                         <td style=" padding-top: 20px" id="message2">{{ answer.message }}</td>
                     </tr>
                     <tr>
-                    <td class="image"><a href="/static/upload/answer/{{ answer.image }}"><img id="image3" src="/static/upload/answer/{{ answer.image }}" alt="" width="400"></a></td>
+                    <td class="image"><a href="/static/upload/{{ answer.image }}"><img id="image3" src="/static/upload/{{ answer.image }}" alt="" width="400"></a></td>
                     </tr>
                     <tr style="font-size: 13px">
                         <td>Answered: {{ answer.submission_time }}</td>

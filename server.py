@@ -11,9 +11,9 @@ def all_questions():
     sort_by = request.form.get('sort_by')
     order_by = request.form.get('order_by')
     if sort_by is None:
-        questions = sort_list('question')
+        questions = sort_list()
     else:
-        questions = sort_list('question', sort_by, order_by)
+        questions = sort_list(sort_by, order_by)
     return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/list")
 
 
@@ -22,9 +22,9 @@ def main_page():
     sort_by = request.form.get('sort_by')
     order_by = request.form.get('order_by')
     if sort_by is None:
-        questions = sort_list('question', limit='LIMIT 5')
+        questions = sort_list(limit='LIMIT 5')
     else:
-        questions = sort_list('question', sort_by, order_by, limit='LIMIT 5')
+        questions = sort_list(sort_by, order_by, 'LIMIT 5')
     return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/")
 
 
@@ -48,7 +48,7 @@ def add_question():
     data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], question_id, 'question')
-        data_manager.update_image('question', question_id, f'{question_id}.png')
+        data_manager.update_image('question', question_id, f'question\\{question_id}.png')
     return redirect(f"/question/{question_id}")
 
 
@@ -60,7 +60,7 @@ def edit_question(question_id):
     data_manager.update_question(question_id, request.form['title'], request.form['message'])
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], question_id, 'question')
-        data_manager.update_image('question', question_id, f'{question_id}.png')
+        data_manager.update_image('question', question_id, f'question\\{question_id}.png')
     return redirect(f"/question/{question_id}")
 
 
@@ -102,8 +102,8 @@ def add_comment(question_id=None, answer_id=None):
     return render_template('add_comment.html', title="Add comment", question_id=question_id)
 
 
-def sort_list(table, sort_by='submission_time', order_direction='DESC', limit=''):
-    return data_manager.get_sorted_data(table, sort_by, order_direction, limit)
+def sort_list(sort_by='submission_time', order_direction='DESC', limit=''):
+    return data_manager.get_sorted_data(sort_by, order_direction, limit)
 
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
@@ -118,7 +118,7 @@ def add_answer(question_id):
     answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], answer_id, 'answer')
-        data_manager.update_image('answer', answer_id, f'{answer_id}.png')
+        data_manager.update_image('answer', answer_id, f'answer\\{answer_id}.png')
     return redirect(f"/question/{question_id}")
 
 
@@ -139,7 +139,7 @@ def edit_answer(answer_id):
     data_manager.update_answer(answer_id, request.form['message'])
     if request.files["file"]:
         data_manager.save_photo(request.files["file"], answer_id, 'answer')
-        data_manager.update_image('answer', answer_id, f'{answer_id}.png')
+        data_manager.update_image('answer', answer_id, f'answer\\{answer_id}.png')
     return redirect(f"/question/{answer['question_id']}")
 
 

@@ -142,10 +142,10 @@ def change_vote_number(cursor, question_id, table, number):
 
 
 @database_common.connection_handler
-def get_sorted_data(cursor, table, sort_by, order_by, limit):
+def get_sorted_data(cursor, sort_by, order_by, limit):
     query = f"""
             SELECT *
-            FROM {table}
+            FROM question
             ORDER BY {sort_by} {order_by}
             {limit};
             """
@@ -156,11 +156,11 @@ def get_sorted_data(cursor, table, sort_by, order_by, limit):
 @database_common.connection_handler
 def get_comments_by_question_id(cursor, question_id):
     query = """
-                        SELECT *
-                        FROM comment
-                        WHERE question_id = %s
-                        ORDER BY id DESC
-                        """
+            SELECT *
+            FROM comment
+            WHERE question_id = %s
+            ORDER BY id DESC;
+            """
     cursor.execute(query, [question_id])
     return cursor.fetchall()
 
@@ -194,9 +194,8 @@ def search_questions(cursor, sentence):
 
 
 def save_photo(img, id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
-    img.save(f"{way}\\{id_index}.png")
-    return f"{id_index}.png"
+    way = (os.path.abspath(f"static\\upload\\"))
+    img.save(f"{way}\\{folder}\\{id_index}.png")
 
 
 def remove_photo(id_index, folder):
@@ -229,7 +228,6 @@ def get_answer_by_id(cursor, answer_id):
 
 @database_common.connection_handler
 def remove_files(cursor, question_id):
-    print(question_id)
     query = """
             SELECT image
             FROM question
@@ -238,20 +236,16 @@ def remove_files(cursor, question_id):
     cursor.execute(query, [question_id])
     question = cursor.fetchall()
     query = """
-                SELECT image
-                FROM  answer
-                WHERE question_id = %s;
-                """
+            SELECT image
+            FROM  answer
+            WHERE question_id = %s;
+            """
     cursor.execute(query, [question_id])
     answer = cursor.fetchall()
-    question_way = (os.path.abspath(f"static\\upload\\question\\"))
-    answer_way = (os.path.abspath(f"static\\upload\\answer\\"))
-    for item in question:
-        if os.path.exists(f"{question_way}\\{item['image']}"):
-            os.remove(f"{question_way}\\{item['image']}")
-    for item in answer:
-        if os.path.exists(f"{answer_way}\\{item['image']}"):
-            os.remove(f"{answer_way}\\{item['image']}")
+    way = (os.path.abspath(f"static\\upload\\"))
+    for item in (question + answer):
+        if os.path.exists(f"{way}\\{item['image']}"):
+            os.remove(f"{way}\\{item['image']}")
 
 
 @database_common.connection_handler

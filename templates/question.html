@@ -40,6 +40,7 @@
         <div id="center">
             <p id="message">{{ question.message }}</p>
             <img src="/static/upload/{{ question.image }}" alt="" width="800">
+            <a href="/question/{{ question.id }}/new-tag">Add tag</a>
             <table>
             {% for comment in comments %}
                     <tr>

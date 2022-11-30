@@ -26,7 +26,7 @@
             <button type="submit">Add new question</button>
             <span style="margin-left: 50px"></span>
         </form>
-        <form action="{{ link }}" method="post" style="display: inline-block">
+        <form action="/list" style="display: inline-block">
             <label for="sort_by">Sort by:</label>
             <select name="sort_by" id="sort_by">
               <option value="title" {% if sort == "title" %} selected {% endif %}>Title</option>
@@ -39,7 +39,7 @@
               <option value="ASC" {% if order == "ASC" %} selected {% endif %}>Ascending</option>
               <option value="DESC" {% if order == "DESC" %} selected {% endif %}>Descending</option>
             </select>
-            <input type="submit" value="Sort" name="sort">
+            <button type="submit">Sort</button>
         </form><br><br>
         <div>
             <form action="/search">

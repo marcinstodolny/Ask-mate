@@ -8,24 +8,16 @@ app = Flask(__name__)
 
 @app.route("/list", methods=['POST', 'GET'])
 def all_questions():
-    sort_by = request.form.get('sort_by')
-    order_by = request.form.get('order_by')
-    if sort_by is None:
-        questions = sort_list()
-    else:
-        questions = sort_list(sort_by, order_by)
-    return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/list")
+    sort_by = request.args.get('sort_by')
+    order_by = request.args.get('order_by')
+    questions = sort_list() if sort_by is None else sort_list(sort_by, order_by)
+    return render_template('index.html', questions=questions, sort=sort_by, order=order_by)
 
 
 @app.route("/", methods=['POST', 'GET'])
 def main_page():
-    sort_by = request.form.get('sort_by')
-    order_by = request.form.get('order_by')
-    if sort_by is None:
-        questions = sort_list(limit='LIMIT 5')
-    else:
-        questions = sort_list(sort_by, order_by, 'LIMIT 5')
-    return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/")
+    questions = sort_list(limit='LIMIT 5')
+    return render_template('index.html', questions=questions)
 
 
 @app.route("/question/<question_id>")

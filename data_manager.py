@@ -142,12 +142,12 @@ def change_vote_number(cursor, question_id, table, number):
 
 
 @database_common.connection_handler
-def get_sorted_data(cursor, table, sort_by, order_by, limit=1000):
+def get_sorted_data(cursor, table, sort_by, order_by, limit):
     query = f"""
             SELECT *
             FROM {table}
             ORDER BY {sort_by} {order_by}
-            LIMIT {limit};
+            {limit};
             """
     cursor.execute(query)
     return cursor.fetchall()

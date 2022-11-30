@@ -22,9 +22,9 @@ def main_page():
     sort_by = request.form.get('sort_by')
     order_by = request.form.get('order_by')
     if sort_by is None:
-        questions = sort_list('question', limit=5)
+        questions = sort_list('question', limit='LIMIT 5')
     else:
-        questions = sort_list('question', sort_by, order_by, limit=5)
+        questions = sort_list('question', sort_by, order_by, limit='LIMIT 5')
     return render_template('index.html', questions=questions, sort=sort_by, order=order_by, link="/")
 
 
@@ -102,11 +102,9 @@ def add_comment(question_id=None, answer_id=None):
     return render_template('add_comment.html', title="Add comment", question_id=question_id)
 
 
-def sort_list(table, sort_by='submission_time', order_direction='DESC', limit=None):
-    if limit:
-        return data_manager.get_sorted_data(table, sort_by, order_direction, limit)
-    else:
-        return data_manager.get_sorted_data(table, sort_by, order_direction)
+def sort_list(table, sort_by='submission_time', order_direction='DESC', limit=''):
+    return data_manager.get_sorted_data(table, sort_by, order_direction, limit)
+
 
 @app.route('/question/<question_id>/new-answer', methods=['GET', 'POST'])
 def add_answer(question_id):

@@ -59,7 +59,7 @@ def edit_question(question_id):
 @app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
     if request.method == 'POST':
-        data_manager.remove_files(question_id)
+        data_manager.remove_images(question_id)
         data_manager.delete_question(question_id)
         return redirect('/')
 

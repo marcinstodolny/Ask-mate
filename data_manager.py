@@ -211,17 +211,6 @@ def search_questions(cursor, sentence):
     return cursor.fetchall()
 
 
-def save_photo(img, id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\"))
-    img.save(f"{way}\\{folder}\\{id_index}.png")
-
-
-def remove_photo(id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
-    if os.path.exists(f"{way}\\{id_index}.png"):
-        os.remove(f"{way}\\{id_index}.png")
-
-
 @database_common.connection_handler
 def update_answer(cursor, answer_id, message):
     query = """
@@ -245,7 +234,7 @@ def get_answer_by_id(cursor, answer_id):
 
 
 @database_common.connection_handler
-def remove_files(cursor, question_id):
+def remove_images(cursor, question_id):
     query = """
             SELECT image
             FROM question
@@ -261,9 +250,9 @@ def remove_files(cursor, question_id):
     cursor.execute(query, [question_id])
     answer = cursor.fetchall()
     way = (os.path.abspath(f"static\\upload\\"))
-    for item in (question + answer):
-        if os.path.exists(f"{way}\\{item['image']}"):
-            os.remove(f"{way}\\{item['image']}")
+    for image in (question + answer):
+        if os.path.exists(f"{way}\\{image['image']}"):
+            os.remove(f"{way}\\{image['image']}")
 
 
 @database_common.connection_handler
@@ -282,3 +271,14 @@ def add_new_tag(cursor, tag_name):
         INSERT INTO tag (name)
         VALUES (%s)"""
     cursor.execute(query, [tag_name])
+
+
+def save_photo(img, id_index, folder):
+    way = (os.path.abspath(f"static\\upload\\"))
+    img.save(f"{way}\\{folder}\\{id_index}.png")
+
+
+def remove_photo(id_index, folder):
+    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
+    if os.path.exists(f"{way}\\{id_index}.png"):
+        os.remove(f"{way}\\{id_index}.png")

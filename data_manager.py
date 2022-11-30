@@ -257,3 +257,23 @@ def update_question_time(cursor, time, question_id):
                 """
     cursor.execute(query, [time, question_id])
 
+@database_common.connection_handler
+def get_comment_by_id(cursor, comment_id):
+    query = """
+                SELECT *
+                FROM comment
+                where id = %s
+                """
+    cursor.execute(query, [comment_id])
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def update_comment(cursor, comment_id, message, time):
+    query = """
+                UPDATE comment
+                SET 
+                message = %s
+                submission_time = %s
+                WHERE id = %s;
+                """
+    cursor.execute(query, [message, time, comment_id])

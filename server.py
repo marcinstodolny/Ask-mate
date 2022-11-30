@@ -150,6 +150,16 @@ def searching():
     return render_template('index.html', questions=questions)
 
 
+@app.route('/comment/<comment_id>/edit', methods=['GET','POST'])
+def edit_comment(comment_id):
+    comment = data_manager.get_comment_by_id(comment_id)[0]
+    if request.method != 'POST':
+        return render_template('edit_comment.html', title="Edit comment", comment=comment)
+    submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    data_manager.update_comment(comment_id, request.form['message'], submission_time)
+    return redirect(f"/question/{comment['question_id']}")
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

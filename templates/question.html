@@ -47,6 +47,11 @@
                     </tr>
                     <tr style="font-size: 13px">
                         <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                       <td>
+                           <form action="/comment/{{ comment.id }}/edit" method="get">
+                                <button type="submit">Edit</button>
+                           </form>
+                       </td>
                         <td>
                             <form action="/answer/{{ comment.id }}/delete" method="post">
                                 <button type="submit">Delete</button>

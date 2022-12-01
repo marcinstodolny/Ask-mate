@@ -24,7 +24,7 @@ def main_page():
 def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     answers = data_manager.get_answers_by_question_id(question_id)
-    comments = data_manager.get_comments_by_question_id(question_id)
+    comments = data_manager.get_comments()
     question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']
     data_manager.increment_view_number(question_id)
     return render_template('question.html', question=question, answers=answers, comments=comments)
@@ -86,18 +86,22 @@ def down_vote(question_id, answer_id=None):
 
 @app.route("/question/<answer_id>/new-comment", methods=["POST", "GET"])
 @app.route("/question/<question_id>/new-comment", methods=["POST", "GET"])
-def add_comment(question_id=None, answer_id=None):
+def add_comment_to_question(question_id=None, answer_id=None):
     if request.method == 'POST':
         submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.new_comment(submission_time, request.form['message'], 0, question_id=question_id, answer_id=answer_id)
         return redirect(f"/question/{question_id}")
-    return render_template('add_comment.html', title="Add comment", question_id=question_id)
+    return render_template('add_comment_q.html', title="Add comment", question_id=question_id)
 
 
 @app.route('/comments/<comment_id>/delete', methods=['POST'])
 def delete_comment(comment_id):
     if request.method == 'POST':
-        question_id = data_manager.get_question_id_by_comment_id(comment_id)[0]['question_id']
+        comment = data_manager.get_comment_by_id(comment_id)[0]
+        if comment['answer_id']:
+            question_id = data_manager.get_question_id_by_answer_id(comment['answer_id'])[0]['question_id']
+        else:
+            question_id = comment['question_id']
         data_manager.delete_comment(comment_id)
         return redirect(f'/question/{question_id}')
 
@@ -164,8 +168,22 @@ def edit_comment(comment_id):
     if request.method != 'POST':
         return render_template('edit_comment.html', title="Edit comment", comment=comment)
     submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if comment['answer_id']:
+        question_id = data_manager.get_question_id_by_answer_id(comment['answer_id'])[0]['question_id']
+    else:
+        question_id = comment['question_id']
     data_manager.update_comment(comment_id, request.form['message'], submission_time)
-    return redirect(f"/question/{comment['question_id']}")
+    return redirect(f"/question/{question_id}")
+
+
+@app.route("/answer/<question_id>/new-comment", methods=["POST", "GET"])
+@app.route("/answer/<answer_id>/new-comment", methods=["POST", "GET"])
+def add_comment_to_answer(question_id=None, answer_id=None):
+    if request.method == 'POST':
+        submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data_manager.new_comment(submission_time, request.form['message'], 0, question_id=question_id, answer_id=answer_id)
+        return redirect(f"/question/{data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']}")
+    return render_template('add_comment_a.html', title="Add comment", answer_id=answer_id)
 
 
 if __name__ == '__main__':

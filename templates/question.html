@@ -43,6 +43,7 @@
             <a href="/question/{{ question.id }}/new-tag">Add tag</a>
             <table>
             {% for comment in comments %}
+                {% if question.id == comment.question_id %}
                     <tr>
                         <td style="padding-top: 20px" id="message2">{{ comment.message }}</td>
                     </tr>
@@ -55,11 +56,12 @@
                        </td>
                         <td>
                             <form action="/comments/{{ comment.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
-                                <button type="submit">Delete</button>
+                                <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
                             </form>
                         </td>
                     </tr>
                     <tr style="border: solid gray; border-width: 1px 0"></tr>
+                {% endif     %}
             {% endfor %}
         </table>
         </div>
@@ -96,10 +98,36 @@
                         </td>
                         <td>
                             <form action="/answer/{{ answer.id }}/delete" method="post">
-                                <button type="submit">Delete</button>
+                                <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/answer/{{ answer.id }}/new-comment">
+                                <input type="submit" value="Add comment" name="comment">
                             </form>
                         </td>
                     </tr>
+                    {% for comment in comments %}
+                        {% if answer.id == comment.answer_id %}
+                            <tr>
+                                <td style="padding-top: 20px" id="message2">{{ comment.message }}</td>
+                            </tr>
+                            <tr style="font-size: 13px">
+                                <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                               <td>
+                                   <form action="/comment/{{ comment.id }}/edit" method="get">
+                                        <button type="submit">Edit</button>
+                                   </form>
+                                </td>
+                                   <td>
+                                    <form action="/comments/{{ comment.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
+                                        <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr style="border: solid gray; border-width: 1px 0"></tr>
+                        {% endif %}
+                    {% endfor %}
                     <tr style="border: solid gray; border-width: 1px 0"></tr>
             {% endfor %}
         </table>

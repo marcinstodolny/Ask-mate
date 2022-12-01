@@ -173,14 +173,13 @@ def get_sorted_data(cursor, sort_by, order_by, limit):
 
 
 @database_common.connection_handler
-def get_comments_by_question_id(cursor, question_id):
+def get_comments(cursor):
     query = """
             SELECT *
             FROM comment
-            WHERE question_id = %s
             ORDER BY id DESC;
             """
-    cursor.execute(query, [question_id])
+    cursor.execute(query)
     return cursor.fetchall()
 
 

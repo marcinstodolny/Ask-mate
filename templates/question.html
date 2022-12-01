@@ -62,12 +62,12 @@
                     <tr style="font-size: 13px">
                         <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
                        <td>
-                           <form action="/comment/{{ comment.id }}/edit" method="get">
+                           <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
                                 <button type="submit">Edit</button>
                            </form>
                        </td>
                         <td>
-                            <form action="/comments/{{ comment.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
+                            <form action="/comments/{{ comment.id }}/{{ question.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
                                 <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
                             </form>
                         </td>
@@ -104,12 +104,12 @@
                             </form>
                         </td>
                         <td>
-                            <form action="/answer/{{ answer.id }}/{{ question.id }}/edit" method="get">
+                            <form action="/answer/{{ answer.id }}/edit" method="get">
                                 <button type="submit">Edit</button>
                             </form>
                         </td>
                         <td>
-                            <form action="/answer/{{ answer.id }}/{{ question.id }}/delete" method="post">
+                            <form action="/answer/{{ answer.id }}/delete" method="post">
                                 <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
                             </form>
                         </td>
@@ -128,12 +128,12 @@
                             <tr style="font-size: 13px">
                                 <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
                                <td>
-                                   <form action="/comment/{{ comment.id }}/edit" method="get">
+                                   <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
                                         <button type="submit">Edit</button>
                                    </form>
                                 </td>
                                    <td>
-                                    <form action="/comments/{{ comment.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
+                                    <form action="/comments/{{ comment.id }}/{{ question.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
                                         <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
                                     </form>
                                 </td>

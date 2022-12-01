@@ -267,6 +267,7 @@ def get_comment_by_id(cursor, comment_id):
                 where id = %s
                 """
     cursor.execute(query, [comment_id])
+    return cursor.fetchall()
 
 
 @database_common.connection_handler

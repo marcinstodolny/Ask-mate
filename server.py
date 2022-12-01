@@ -109,7 +109,7 @@ def add_comment_to_answer(answer_id=None):
 def edit_comment(comment_id, question_id):
     comment = data_manager.get_comment_by_id(comment_id)[0]
     if request.method != 'POST':
-        return render_template('edit_comment.html', title="Edit comment", comment=comment)
+        return render_template('edit_comment.html', title="Edit comment", comment=comment, question=question_id)
     submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     data_manager.update_comment(comment_id, request.form['message'], submission_time)
     return redirect(f"/question/{question_id}")

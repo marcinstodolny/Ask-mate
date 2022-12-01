@@ -38,16 +38,15 @@
             <p id="message">{{ question.message }}</p>
             <img src="/static/upload/{{ question.image }}" alt="" width="800">
         </div>
-        <div id="tags">
-            <p>
-                <a href="/question/{{ question.id }}/new-tag">Add tag</a>
-                <span class="tab25px"></span>
+        <div class="tags">
+            <form action="/tags" method="post">
+                <a style="text-align: center" href="/question/{{ question.id }}/new-tag">Add tag</a>
                 {% for tag in tags %}
-                    <span class="tab25px"></span>
-                    <button class="tag_button" disabled>{{ tag.name }}</button>
+                    <span id="tab25px"></span>
+                    <button class="tag_button" type="submit">{{ tag.name }}</button>
                     <a href="/question/{{ question.id }}/tag/{{ tag.id }}/delete">X</a>
                 {% endfor %}
-            </p>
+            </form>
         </div>
         <div id="center">
             <table>

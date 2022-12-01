@@ -55,8 +55,12 @@
             {% endfor %}
         </table><br>
         <div>
-            <form action="/list">
+            <form action="/list" method="post" style="display: inline-block">
                 <button type="submit">All questions</button>
+            </form>
+            <span class="tab"></span>
+            <form action="/tags" method="post" style="display: inline-block">
+                <button type="submit">Tags list</button>
             </form>
         </div>
         <footer>

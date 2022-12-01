@@ -183,6 +183,12 @@ def delete_tag(question_id, tag_id):
     return redirect(f"/question/{question_id}")
 
 
+@app.route('/tags', methods=['GET', 'POST'])
+def tags():
+    tags_list = data_manager.get_tag_names_and_tags_occurs()
+    return render_template('tags_list.html', tags_list=tags_list)
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

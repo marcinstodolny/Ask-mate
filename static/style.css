@@ -8,9 +8,6 @@ a:visited, a:link {
 .tab{
     margin-left: 100px;
 }
-.multi_tab{
-    margin-left: 250px;
-}
 #message{
     font-size: 35px;
 }
@@ -41,12 +38,13 @@ table{
 display: block;
 }
 
-#tags {
+.tags {
     font-size: 18px;
     text-align: center;
+    display: inline;
 }
 
-.tab25px {
+#tab25px {
     margin-left: 25px;
 }
 

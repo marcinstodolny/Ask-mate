@@ -35,3 +35,6 @@ table{
 .image img {
 display: block;
 }
+#tags {
+    text-align: center;
+}

@@ -8,6 +8,7 @@
         <input type="text" name="title" required value="{{ question.title }}">
     </label><br><br>
 {% endblock %}
-{% block message %}{{ question.message }}{% endblock %}
+{% block message %}Message:{% endblock %}
+{% block message_area %}{{ question.message }}{% endblock %}
 {% block add_file %}<input type="file" name="file" id="file">{% endblock %}
 {% block button %}{{ title }}{% endblock %}

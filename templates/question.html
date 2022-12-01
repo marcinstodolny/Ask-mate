@@ -40,7 +40,17 @@
         <div id="center">
             <p id="message">{{ question.message }}</p>
             <img src="/static/upload/{{ question.image }}" alt="" width="800">
-            <a href="/question/{{ question.id }}/new-tag">Add tag</a>
+        </div>
+        <div id="tags">
+            <p>
+                <a href="/question/{{ question.id }}/new-tag">Add tag</a>
+                <span class="tab"></span>
+                {% for tag in tags %}
+                    <button disabled>{{ tag.name }}</button>
+                {% endfor %}
+            </p>
+        </div>
+        <div id="center">
             <table>
             {% for comment in comments %}
                     <tr>

@@ -18,13 +18,17 @@ import database_common
 
 
 @database_common.connection_handler
-def add_new_question(cursor, submission_time, view_number, vote_number, title, message, image):
+def add_new_question(
+    cursor, submission_time, view_number, vote_number, title, message, image
+):
     query = """
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 """
 
-    cursor.execute(query, [submission_time, view_number, vote_number, title, message, image])
+    cursor.execute(
+        query, [submission_time, view_number, vote_number, title, message, image]
+    )
 
 
 @database_common.connection_handler
@@ -249,20 +253,10 @@ def remove_images(cursor, question_id):
             """
     cursor.execute(query, [question_id])
     answer = cursor.fetchall()
-    way = (os.path.abspath(f"static\\upload\\"))
-    for image in (question + answer):
+    way = os.path.abspath(f"static\\upload\\")
+    for image in question + answer:
         if os.path.exists(f"{way}\\{image['image']}"):
             os.remove(f"{way}\\{image['image']}")
-
-
-@database_common.connection_handler
-def update_question_time(cursor, time, question_id):
-    query = """
-                UPDATE question
-                SET submission_time = %s
-                WHERE id = %s;
-                """
-    cursor.execute(query, [time, question_id])
 
 
 @database_common.connection_handler
@@ -344,11 +338,22 @@ def update_comment(cursor, comment_id, message, time):
 
 
 def save_photo(img, id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\"))
+    way = os.path.abspath(f"static\\upload\\")
     img.save(f"{way}\\{folder}\\{id_index}.png")
 
 
 def remove_photo(id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
+    way = os.path.abspath(f"static\\upload\\{folder}\\")
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
+
+
+# data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
+# @database_common.connection_handler
+# def update_time(cursor, table, time, question_id):
+#     query = """
+#                 UPDATE question
+#                 SET submission_time = %s
+#                 WHERE id = %s;
+#                 """
+#     cursor.execute(query, [time, question_id])

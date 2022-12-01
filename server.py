@@ -160,8 +160,13 @@ def delete_answer(answer_id):
 @app.route('/search')
 def searching():
     search_phrases = request.args.get('q')
-    questions = data_manager.search_questions(search_phrases)
-    return render_template('index.html', questions=questions)
+    titles = data_manager.search_question_title(search_phrases)
+    util.exchange_search_phrases_with_marked_one(titles, search_phrases, 'title')
+    answers = data_manager.search_answer(search_phrases)
+    util.exchange_search_phrases_with_marked_one(answers, search_phrases, 'message')
+    question_messages = data_manager.search_question_message(search_phrases)
+    util.exchange_search_phrases_with_marked_one(question_messages, search_phrases, 'message')
+    return render_template('search.html', titles=titles, question_messages=question_messages, answers=answers, search=search_phrases)
 
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])

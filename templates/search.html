@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+        body{
+             text-align: center;
+        }
+</style>
+<head>
+    <link rel="stylesheet" href="static/style.css">
+    <meta charset="UTF-8">
+    <title>ASK MATE by Marcin, Marcin, Basia & Tomek</title>
+</head>
+    <body>
+        <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
+        <form action="/add_question" method="get" style="display: inline-block">
+            <button type="submit">Add new question</button>
+            <span style="margin-left: 50px"></span>
+        </form>
+        <form action="/list" style="display: inline-block">
+            <label for="sort_by">Sort by:</label>
+            <select name="sort_by" id="sort_by">
+              <option value="title" {% if sort == "title" %} selected {% endif %}>Title</option>
+              <option value="submission_time" {% if sort == "submission_time" %} selected {% endif %}>Submission time</option>
+              <option value="view_number" {% if sort == "view_number" %} selected {% endif %}>View number</option>
+              <option value="vote_number" {% if sort == "vote_number" %} selected {% endif %}>Vote number</option>
+            </select>
+            <label for="order_by">Order by:</label>
+            <select name="order_by" id="order_by">
+              <option value="ASC" {% if order == "ASC" %} selected {% endif %}>Ascending</option>
+              <option value="DESC" {% if order == "DESC" %} selected {% endif %}>Descending</option>
+            </select>
+            <button type="submit">Sort</button>
+        </form><br><br>
+        <div>
+            <form action="/search">
+                <label for="search-question-input">Search question:</label>
+                <input id="search-question-input" type="search" name="q" width="100px">
+                <button type="submit">Search</button>
+            </form>
+        </div><br>
+        <table id="question_table">
+            <tr>
+                <th><b>Title</b></th>
+                <th><b>Submission time</b></th>
+                <th><b>View number</b></th>
+                <th><b>Vote number</b></th>
+            </tr>
+            {% for title in titles %}
+
+                <td><a href="/question/{{title.id}}">{{title.title|safe}}</a></td>
+                <td>{{title.submission_time}}</td>
+                <td>{{title.view_number}}</td>
+                <td>{{title.vote_number}}</td>
+                <tr>
+                {% for message in question_messages %}
+                    {% if title.id == message.id %}
+                    <td colspan="4">
+                        Description: {{ message.message|safe }}
+                    </td>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+
+                {% for answer in answers %}
+                        {% if title.id == answer.question_id %}
+                            <tr>
+                                <td colspan="4" style="text-indent: 0">
+                                Answer: {{ answer.message|safe }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                {% endfor %}
+
+
+            {% endfor %}
+            </table><br>
+        <div>
+            <a href="/list">All questions</a>
+        </div>
+        <footer>
+            <br>
+            <p>© 2022 Marcin, Marcin & Tomek</p>
+        </footer>
+    </body>
+</html>

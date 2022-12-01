@@ -204,7 +204,7 @@ def delete_answer(cursor, answer_id):
 
 
 @database_common.connection_handler
-def search_questions(cursor, sentence):
+def search_question_title(cursor, sentence):
     searching_phrase = f"%{sentence}%"
     query = """
         SELECT DISTINCT question.id, question.title, question.submission_time, question.view_number, question.vote_number
@@ -212,6 +212,30 @@ def search_questions(cursor, sentence):
         FULL OUTER JOIN answer ON question.id = answer.question_id
         WHERE title LIKE %s or question.message LIKE %s or answer.message LIKE %s"""
     cursor.execute(query, [searching_phrase, searching_phrase, searching_phrase])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def search_answer(cursor, sentence):
+    searching_phrase = f"%{sentence}%"
+    query = """
+            SELECT DISTINCT answer.question_id, answer.message
+            FROM question
+            FULL OUTER JOIN answer ON question.id = answer.question_id
+            WHERE answer.message LIKE %s"""
+    cursor.execute(query, [searching_phrase])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def search_question_message(cursor, sentence):
+    searching_phrase = f"%{sentence}%"
+    query = """
+            SELECT DISTINCT question.id, question.message
+            FROM question
+            FULL OUTER JOIN answer ON question.id = answer.question_id
+            WHERE question.message LIKE %s"""
+    cursor.execute(query, [searching_phrase])
     return cursor.fetchall()
 
 

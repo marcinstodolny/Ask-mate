@@ -78,3 +78,6 @@ display: block;
   background-color: #a0b2ea;
   color: rgba(0, 0, 0, 0.8);
 }
+mark{
+    background-color: turquoise;
+}

@@ -10,8 +10,8 @@ a:visited, a:link {
 }
 #message{
     font-size: 35px;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 12%;
+    margin-right: 12%;
 }
 #message2{
     font-size: 20px;
@@ -23,6 +23,8 @@ a:visited, a:link {
 #title{
     font-size: 50px;
     word-break:break-word;
+    margin-left: 12%;
+    margin-right: 12%;
 }
 tr, td{
     word-wrap:break-word;

@@ -4,19 +4,9 @@
         body{
              text-align: center;
         }
-        th,td{
-            border:1px solid black;
-            word-wrap:break-word;
-            max-width: 900px;
-            padding: 10px;
-        }
-        table {
-            margin-left: auto;
-            margin-right: auto;
-            border-collapse: collapse;
-        }
 </style>
 <head>
+    <link rel="stylesheet" href="static/style.css">
     <meta charset="UTF-8">
     <title>ASK MATE by Marcin, Marcin, Basia & Tomek</title>
 </head>
@@ -48,12 +38,12 @@
                 <button type="submit">Search</button>
             </form>
         </div><br>
-        <table>
+        <table id="question_table">
             <tr>
-                <td><b>Title</b></td>
-                <td><b>Submission time</b></td>
-                <td><b>View number</b></td>
-                <td><b>Vote number</b></td>
+                <th><b>Title</b></th>
+                <th><b>Submission time</b></th>
+                <th><b>View number</b></th>
+                <th><b>Vote number</b></th>
             </tr>
             {% for question in questions %}
             <tr>

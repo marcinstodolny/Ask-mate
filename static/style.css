@@ -1,3 +1,7 @@
+a:visited, a:link {
+        text-decoration: none;
+    }
+
 #center{
     text-align: center;
 }
@@ -42,4 +46,35 @@ display: block;
 
 .tab25px {
     margin-left: 25px;
+}
+
+#question_table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#question_table td, #question_table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#question_table tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#question_table tr:nth-child(even) {
+    background-color: #eee9e9;
+}
+
+#question_table tr:hover {
+    background-color: #a7b4e2;
+}
+
+#question_table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #a0b2ea;
+  color: rgba(0, 0, 0, 0.8);
 }

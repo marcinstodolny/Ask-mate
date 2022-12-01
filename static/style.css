@@ -10,6 +10,8 @@ a:visited, a:link {
 }
 #message{
     font-size: 35px;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 #message2{
     font-size: 20px;

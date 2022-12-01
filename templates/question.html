@@ -9,7 +9,7 @@
         <div id="center">
             <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
             <br>
-            <p id="title"><strong>{{ question.title }}</strong></p>
+            <p id="title"><strong>{{ question.title |safe}}</strong></p>
             <p id="info">
                 Asked {{ question.submission_time }} ago
                 <span class="tab"></span>
@@ -35,7 +35,7 @@
             </form>
         </div><br>
         <div id="center">
-            <p id="message">{{ question.message }}</p>
+            <p id="message">{{ question.message |safe}}</p>
             <img src="/static/upload/{{ question.image }}" alt="" width="800">
         </div>
         <div class="tags">
@@ -53,7 +53,7 @@
             {% for comment in comments %}
                 {% if question.id == comment.question_id %}
                     <tr>
-                        <td style="padding-top: 20px" id="message2">{{ comment.message }}</td>
+                        <td style="padding-top: 20px" id="message2">{{ comment.message |safe}}</td>
                     </tr>
                     <tr style="font-size: 13px">
                         <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
@@ -83,7 +83,7 @@
         <table >
             {% for answer in answers %}
                     <tr>
-                        <td style=" padding-top: 20px" id="message2">{{ answer.message }}</td>
+                        <td style=" padding-top: 20px" id="message2">{{ answer.message |safe}}</td>
                     </tr>
                     <tr>
                     <td class="image"><a href="/static/upload/{{ answer.image }}"><img id="image3" src="/static/upload/{{ answer.image }}" alt="" width="400"></a></td>
@@ -119,7 +119,7 @@
                     {% for comment in comments %}
                         {% if answer.id == comment.answer_id %}
                             <tr>
-                                <td style="padding-top: 20px" id="message2">{{ comment.message }}</td>
+                                <td style="padding-top: 20px" id="message2">{{ comment.message |safe}}</td>
                             </tr>
                             <tr style="font-size: 13px">
                                 <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>

@@ -25,11 +25,14 @@ def main_page():
 def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']
+    answers = data_manager.get_answers_by_question_id(question_id)
+    comments = data_manager.get_comments()
     data_manager.increment_view_number(question_id)
+    util.exchange_newlines(question, answers, comments)
     return render_template('question.html',
                            question=question,
-                           answers=data_manager.get_answers_by_question_id(question_id),
-                           comments=data_manager.get_comments(),
+                           answers=answers,
+                           comments=comments,
                            tags=data_manager.get_tags_name_and_id_by_question_id(question_id))
 
 
@@ -160,12 +163,12 @@ def delete_answer(answer_id):
 @app.route('/search')
 def searching():
     search_phrases = request.args.get('q')
+    if search_phrases == '\\n':
+        search_phrases = 'n'
     titles = data_manager.search_question_title(search_phrases)
-    util.exchange_search_phrases_with_marked_one(titles, search_phrases, 'title')
     answers = data_manager.search_answer(search_phrases)
-    util.exchange_search_phrases_with_marked_one(answers, search_phrases, 'message')
     question_messages = data_manager.search_question_message(search_phrases)
-    util.exchange_search_phrases_with_marked_one(question_messages, search_phrases, 'message')
+    util.exchange_search_phrases(titles, answers, question_messages, search_phrases)
     return render_template('search.html', titles=titles, question_messages=question_messages, answers=answers, search=search_phrases)
 
 

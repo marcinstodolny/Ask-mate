@@ -17,7 +17,6 @@ def exchange_search_phrases(titles, answers, question_messages, search_phrases):
 
 
 def exchange_question_newlines_to_html(question):
-    question['title'] = question['title'].replace('\n', '<br>')
     question['message'] = question['message'].replace('\n', '<br>')
 
 

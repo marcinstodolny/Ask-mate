@@ -60,7 +60,7 @@ def get_question_by_id(cursor, question_id):
 
 
 @database_common.connection_handler
-def get_question_id(cursor, time):
+def get_question_id_by_time(cursor, time):
     query = """
                 SELECT id
                 FROM question
@@ -139,6 +139,7 @@ def increment_view_number(cursor, question_id):
                     WHERE id = %s;
                     """
     cursor.execute(query, [question_id])
+
 
 @database_common.connection_handler
 def new_answer(cursor, time, vote, question_id, message, image):
@@ -234,7 +235,7 @@ def get_answer_by_id(cursor, answer_id):
 
 
 @database_common.connection_handler
-def remove_files(cursor, question_id):
+def remove_images(cursor, question_id):
     query = """
             SELECT image
             FROM question
@@ -282,6 +283,7 @@ def get_comment_by_id(cursor, comment_id):
                 """
     cursor.execute(query, [comment_id])
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def update_comment(cursor, comment_id, message, time):

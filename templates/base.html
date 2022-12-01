@@ -17,9 +17,9 @@
     <h1>{% block header %}{% endblock %}</h1>
     <form action="{% block action %}{% endblock %}" method="post" enctype="multipart/form-data">
     {% block title_area %}{% endblock %}
-        <label for="message">Message:</label><br>
+        <label for="message">{% block message %}{% endblock %}</label><br>
         <label>
-            <textarea name="message" cols="30" rows="5" required>{% block message %}{% endblock %}</textarea>
+            <textarea name="message" cols="30" rows="5" required>{% block message_area %}{% endblock %}</textarea>
         </label><br><br>
             {% block add_file %}{% endblock %}
             <br><br>

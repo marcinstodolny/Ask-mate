@@ -266,6 +266,26 @@ def update_question_time(cursor, time, question_id):
 
 
 @database_common.connection_handler
+def get_comment_by_id(cursor, comment_id):
+    query = """
+                SELECT *
+                FROM comment
+                where id = %s
+                """
+    cursor.execute(query, [comment_id])
+
+
+@database_common.connection_handler
+def get_tag_id_by_tag_name(cursor, tag_name):
+    query = """
+        SELECT id
+        FROM tag
+        WHERE name = %s"""
+    cursor.execute(query, [tag_name])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
 def add_new_tag(cursor, tag_name):
     query = """
         INSERT INTO tag (name)
@@ -274,14 +294,40 @@ def add_new_tag(cursor, tag_name):
 
 
 @database_common.connection_handler
-def get_comment_by_id(cursor, comment_id):
+def link_tag_id_with_question_id(cursor, question_id, tag_id):
     query = """
-                SELECT *
-                FROM comment
-                where id = %s
-                """
-    cursor.execute(query, [comment_id])
+        INSERT INTO question_tag (question_id, tag_id)
+        VALUES (%s, %s)"""
+    cursor.execute(query, [question_id, tag_id])
+
+
+@database_common.connection_handler
+def get_tags_name_and_id_by_question_id(cursor, question_id):
+    query = """
+        SELECT tag.name, tag.id
+        FROM tag
+        INNER JOIN question_tag ON tag.id = question_tag.tag_id
+        WHERE question_tag.question_id = %s"""
+    cursor.execute(query, [question_id])
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def check_tag_id_with_question_id(cursor, question_id, tag_id):
+    query = """
+        SELECT tag_id
+        FROM question_tag
+        WHERE question_id = %s AND tag_id = %s"""
+    cursor.execute(query, [question_id, tag_id])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def delete_tag_from_question(cursor, question_id, tag_id):
+    query = """
+        DELETE FROM question_tag
+        WHERE question_id = %s AND tag_id = %s"""
+    cursor.execute(query, [question_id, tag_id])
 
 
 @database_common.connection_handler

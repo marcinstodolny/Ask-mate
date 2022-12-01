@@ -35,3 +35,11 @@ table{
 .image img {
 display: block;
 }
+
+#tags {
+    text-align: center;
+}
+
+.tab25px {
+    margin-left: 25px;
+}

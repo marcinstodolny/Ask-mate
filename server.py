@@ -25,9 +25,10 @@ def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     answers = data_manager.get_answers_by_question_id(question_id)
     comments = data_manager.get_comments()
+    tags = data_manager.get_tags_name_and_id_by_question_id(question_id)
     question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']
     data_manager.increment_view_number(question_id)
-    return render_template('question.html', question=question, answers=answers, comments=comments)
+    return render_template('question.html', question=question, answers=answers, comments=comments, tags=tags)
 
 
 @app.route("/add_question", methods=['GET', 'POST'])
@@ -157,9 +158,20 @@ def searching():
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
 def new_tag(question_id):
     if request.method == 'POST':
-        data_manager.add_new_tag(request.form['message'])
+        tag_id = data_manager.get_tag_id_by_tag_name(request.form['message'])
+        if not tag_id:
+            data_manager.add_new_tag(request.form['message'])
+        tag_id = data_manager.get_tag_id_by_tag_name(request.form['message'])[0]['id']
+        if not data_manager.check_tag_id_with_question_id(question_id, tag_id):
+            data_manager.link_tag_id_with_question_id(question_id, tag_id)
         return redirect(f"/question/{question_id}")
     return render_template('add_tag.html', title="Add new tag", question_id=question_id)
+
+
+@app.route('/question/<question_id>/tag/<tag_id>/delete')
+def delete_tag(question_id, tag_id):
+    data_manager.delete_tag_from_question(question_id, tag_id)
+    return redirect(f"/question/{question_id}")
 
 
 @app.route('/comment/<comment_id>/edit', methods=['GET', 'POST'])

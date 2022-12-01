@@ -4,3 +4,8 @@
 {% block action %}/question/{{question_id}}/new-comment{% endblock %}
 {% block message %}Message:{% endblock %}
 {% block button %}{{ title }}{% endblock %}
+{% block back_button %}
+    <form action="/question/{{ question_id }}" method="post">
+        <button type="submit">Back to question</button>
+    </form>
+{% endblock %}

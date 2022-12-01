@@ -8,9 +8,6 @@ a:visited, a:link {
 .tab{
     margin-left: 100px;
 }
-.multi_tab{
-    margin-left: 250px;
-}
 #message{
     font-size: 35px;
 }
@@ -18,7 +15,8 @@ a:visited, a:link {
     font-size: 20px;
 }
 #info{
-    font-size: 18px
+    font-size: 18px;
+    display: inline-block;
 }
 #title{
     font-size: 50px;
@@ -40,11 +38,13 @@ table{
 display: block;
 }
 
-#tags {
+.tags {
+    font-size: 18px;
     text-align: center;
+    display: inline;
 }
 
-.tab25px {
+#tab25px {
     margin-left: 25px;
 }
 
@@ -78,6 +78,34 @@ display: block;
   background-color: #a0b2ea;
   color: rgba(0, 0, 0, 0.8);
 }
-mark{
+
+mark {
     background-color: turquoise;
+}
+
+.tag_button {
+    background-color: #a7b4e2;
+    color: white;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+button, .inputs {
+    background-color: #a0b2ea;
+    border: none;
+    color: #343434;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button:hover, .inputs:hover{
+    box-shadow: 0 10px 15px 0 rgba(0,0,0,0.24),0 10px 20px 0 rgba(0,0,0,0.19);
 }

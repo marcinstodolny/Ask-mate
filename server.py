@@ -21,7 +21,7 @@ def main_page():
     return render_template('index.html', questions=questions)
 
 
-@app.route("/question/<question_id>")
+@app.route("/question/<question_id>", methods=['GET', 'POST'])
 def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']
@@ -186,6 +186,12 @@ def new_tag(question_id):
 def delete_tag(question_id, tag_id):
     data_manager.delete_tag_from_question(question_id, tag_id)
     return redirect(f"/question/{question_id}")
+
+
+@app.route('/tags', methods=['GET', 'POST'])
+def tags():
+    tags_list = data_manager.get_tag_names_and_tags_occurs()
+    return render_template('tags_list.html', tags_list=tags_list)
 
 
 if __name__ == '__main__':

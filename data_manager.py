@@ -362,6 +362,17 @@ def update_comment(cursor, comment_id, message, time):
     cursor.execute(query, [message, time, comment_id])
 
 
+@database_common.connection_handler
+def get_tag_names_and_tags_occurs(cursor):
+    query = """
+        SELECT tag.name, COUNT(question_tag.tag_id) AS occurrence_numbers
+        FROM question_tag
+        LEFT JOIN tag ON question_tag.tag_id = tag.id
+        GROUP BY question_tag.tag_id, tag.name
+        ORDER BY occurrence_numbers DESC"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
 def save_photo(img, id_index, folder):
     way = os.path.abspath(f"static\\upload\\")
     img.save(f"{way}\\{folder}\\{id_index}.png")

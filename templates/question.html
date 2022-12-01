@@ -10,23 +10,20 @@
             <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
             <br>
             <p id="title"><strong>{{ question.title }}</strong></p>
-                <form action="/question/{{ question.id }}/vote-up" method="post">
-                    <span class="multi_tab"></span>
-                    <span class="multi_tab"></span>
-                    <input  type="submit" value="&#8593" name="vote_up">
-                </form>
             <p id="info">
                 Asked {{ question.submission_time }} ago
                 <span class="tab"></span>
                 Viewed {{ question.view_number }}
                 <span class="tab"></span>
-                Vote number {{ question.vote_number }}
-            </p>
-                <form action="/question/{{ question.id }}/vote-down" method="post">
-                    <span class="multi_tab"></span>
-                    <span class="multi_tab"></span>
-                    <input type="submit" value="&#8595" name="vote_down">
+                Vote number
+                <form action="/question/{{ question.id }}/vote-up" method="post" style="display: inline-block">
+                    <input class="inputs" type="submit" value="&#8593" name="vote_up">
                 </form>
+                {{ question.vote_number }}
+                <form action="/question/{{ question.id }}/vote-down" method="post" style="display: inline-block">
+                    <input class="inputs" type="submit" value="&#8595" name="vote_down">
+                </form>
+            </p>
         </div>
         <div id="center" style="margin-right: 175px">
             <form style="display:inline-block" action="/question/{{ question.id }}/edit" method="get">
@@ -47,7 +44,7 @@
                 <span class="tab25px"></span>
                 {% for tag in tags %}
                     <span class="tab25px"></span>
-                    <button disabled>{{ tag.name }}</button>
+                    <button class="tag_button" disabled>{{ tag.name }}</button>
                     <a href="/question/{{ question.id }}/tag/{{ tag.id }}/delete">X</a>
                 {% endfor %}
             </p>
@@ -79,7 +76,7 @@
         </div>
         <div id="center" style="margin-right: 925px;">
                 <form action="/question/{{ question.id }}/new-comment">
-                    <input type="submit" value="Add comment" name="comment">
+                    <input class="inputs" type="submit" value="Add comment" name="comment">
                 </form>
         </div>
         <br>
@@ -96,11 +93,11 @@
                         <td>Answered: {{ answer.submission_time }}</td>
                         <td>
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-up" method="post" style="display: inline-block">
-                                <input type="submit" value="&#8593" name="vote_up">
+                                <input class="inputs" type="submit" value="&#8593" name="vote_up">
                             </form>
                                 <span class="number">{{ answer.vote_number }}</span>
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-down" method="post" style="display: inline-block">
-                                <input type="submit" value="&#8595" name="vote_down">
+                                <input class="inputs" type="submit" value="&#8595" name="vote_down">
                             </form>
                         </td>
                         <td>
@@ -115,7 +112,7 @@
                         </td>
                         <td>
                             <form action="/answer/{{ answer.id }}/new-comment">
-                                <input type="submit" value="Add comment" name="comment">
+                                <input class="inputs" type="submit" value="Add comment" name="comment">
                             </form>
                         </td>
                     </tr>
@@ -148,12 +145,13 @@
         <footer id="center">
             <div style="margin-right: 925px;"><br><br>
             <form action="/question/{{ question.id }}/new-answer">
-                <input type="submit" value="Add answer" name="answer">
+                <input class="inputs" type="submit" value="Add answer" name="answer">
             </form><br>
-                <a href="/"> Back to main page </a><br><br>
                 </div>
+            <form action="/">
+                <button type="submit">Back to main page</button>
+            </form>
             <p>© 2022 Marcin, Marcin, Basia & Tomek</p>
-
         </footer>
     </body>
 </html>

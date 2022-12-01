@@ -21,7 +21,7 @@ def main_page():
     return render_template('index.html', questions=questions)
 
 
-@app.route("/question/<question_id>")
+@app.route("/question/<question_id>", methods=['GET', 'POST'])
 def display_question(question_id):
     question = data_manager.get_question_by_id(question_id)[0]
     question['submission_time'] = (datetime.datetime.now().replace(microsecond=0)) - question['submission_time']

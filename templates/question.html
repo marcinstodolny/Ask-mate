@@ -119,6 +119,7 @@
                             </form>
                         </td>
                     </tr>
+                    <tr style="border: solid gray; border-width: 1px 0"></tr>
                     {% for comment in comments %}
                         {% if answer.id == comment.answer_id %}
                             <tr>
@@ -140,7 +141,7 @@
                             <tr style="border: solid gray; border-width: 1px 0"></tr>
                         {% endif %}
                     {% endfor %}
-                    <tr style="border: solid gray; border-width: 1px 0"></tr>
+                    <tr style="border: solid black; border-width: 2px 0"></tr>
             {% endfor %}
         </table>
         </div>

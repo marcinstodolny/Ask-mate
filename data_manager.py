@@ -303,9 +303,9 @@ def link_tag_id_with_question_id(cursor, question_id, tag_id):
 
 
 @database_common.connection_handler
-def get_tags_name_by_id(cursor, question_id):
+def get_tags_name_and_id_by_question_id(cursor, question_id):
     query = """
-        SELECT tag.name
+        SELECT tag.name, tag.id
         FROM tag
         INNER JOIN question_tag ON tag.id = question_tag.tag_id
         WHERE question_tag.question_id = %s"""
@@ -323,6 +323,15 @@ def check_tag_id_with_question_id(cursor, question_id, tag_id):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def delete_tag_from_question(cursor, question_id, tag_id):
+    query = """
+        DELETE FROM question_tag
+        WHERE question_id = %s AND tag_id = %s"""
+    cursor.execute(query, [question_id, tag_id])
+
+
+@database_common.connection_handler
 def update_comment(cursor, comment_id, message, time):
     query = """
                 UPDATE comment

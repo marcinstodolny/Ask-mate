@@ -44,9 +44,11 @@
         <div id="tags">
             <p>
                 <a href="/question/{{ question.id }}/new-tag">Add tag</a>
-                <span class="tab"></span>
+                <span class="tab25px"></span>
                 {% for tag in tags %}
+                    <span class="tab25px"></span>
                     <button disabled>{{ tag.name }}</button>
+                    <a href="/question/{{ question.id }}/tag/{{ tag.id }}/delete">X</a>
                 {% endfor %}
             </p>
         </div>

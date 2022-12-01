@@ -1,9 +1,8 @@
 import datetime
-
-from flask import Flask, request, render_template, redirect
-
 import data_manager
 import util
+
+from flask import Flask, request, render_template, redirect
 
 app = Flask(__name__)
 

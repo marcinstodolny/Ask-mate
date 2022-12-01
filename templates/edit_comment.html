@@ -1,4 +1,5 @@
 {% extends "base.html" %}
 {% block action %}/comment/{{ comment.id }}/{{ question }}/edit{% endblock %}
-{% block message %}{{ comment.message }}{% endblock %}
+{% block message %}Message:{% endblock %}
+{% block message_area %}{{ comment.message }}{% endblock %}
 {% block button %}{{ title }}{% endblock %}

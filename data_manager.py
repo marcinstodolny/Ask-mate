@@ -373,6 +373,7 @@ def get_tag_names_and_tags_occurs(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 def save_photo(img, id_index, folder):
     way = os.path.abspath(f"static\\upload\\")
     img.save(f"{way}\\{folder}\\{id_index}.png")
@@ -383,7 +384,7 @@ def remove_photo(id_index, folder):
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
 
-
+# get question with microseconds - more secure version of get id by time
 # data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
 # @database_common.connection_handler
 # def update_time(cursor, table, time, question_id):

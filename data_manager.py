@@ -131,9 +131,9 @@ def update_image(cursor, table, question_id, image):
 
 
 @database_common.connection_handler
-def increment_view_number(cursor, question_id, table):
-    query = f"""
-                    UPDATE {table}
+def increment_view_number(cursor, question_id):
+    query = """
+                    UPDATE question
                     SET 
                     view_number = view_number + 1
                     WHERE id = %s;
@@ -273,17 +273,6 @@ def add_new_tag(cursor, tag_name):
     cursor.execute(query, [tag_name])
 
 
-def save_photo(img, id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\"))
-    img.save(f"{way}\\{folder}\\{id_index}.png")
-
-
-def remove_photo(id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
-    if os.path.exists(f"{way}\\{id_index}.png"):
-        os.remove(f"{way}\\{id_index}.png")
-
-
 @database_common.connection_handler
 def get_comment_by_id(cursor, comment_id):
     query = """
@@ -305,3 +294,14 @@ def update_comment(cursor, comment_id, message, time):
                 WHERE id = %s;
                 """
     cursor.execute(query, [message, time, comment_id])
+
+
+def save_photo(img, id_index, folder):
+    way = (os.path.abspath(f"static\\upload\\"))
+    img.save(f"{way}\\{folder}\\{id_index}.png")
+
+
+def remove_photo(id_index, folder):
+    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
+    if os.path.exists(f"{way}\\{id_index}.png"):
+        os.remove(f"{way}\\{id_index}.png")

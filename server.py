@@ -163,8 +163,8 @@ def delete_answer(answer_id):
 @app.route('/search')
 def searching():
     search_phrases = request.args.get('q')
-    if search_phrases == '\\n':
-        search_phrases = 'n'
+    if search_phrases[0] == '\\':
+        search_phrases = search_phrases[1:]
     titles = data_manager.search_question_title(search_phrases)
     answers = data_manager.search_answer(search_phrases)
     question_messages = data_manager.search_question_message(search_phrases)

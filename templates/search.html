@@ -45,15 +45,35 @@
                 <th><b>View number</b></th>
                 <th><b>Vote number</b></th>
             </tr>
-            {% for question in questions %}
-            <tr>
-                <td><a href="/question/{{question.id}}">{{question.title}}</a></td>
-                <td>{{question.submission_time}}</td>
-                <td>{{question.view_number}}</td>
-                <td>{{question.vote_number}}</td>
-            </tr>
+            {% for title in titles %}
+
+                <td><a href="/question/{{title.id}}">{{title.title|safe}}</a></td>
+                <td>{{title.submission_time}}</td>
+                <td>{{title.view_number}}</td>
+                <td>{{title.vote_number}}</td>
+                <tr>
+                {% for message in question_messages %}
+                    {% if title.id == message.id %}
+                    <td colspan="4">
+                        Description: {{ message.message|safe }}
+                    </td>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+
+                {% for answer in answers %}
+                        {% if title.id == answer.question_id %}
+                            <tr>
+                                <td colspan="4" style="text-indent: 0">
+                                Answer: {{ answer.message|safe }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                {% endfor %}
+
+
             {% endfor %}
-        </table><br>
+            </table><br>
         <div>
             <form action="/list" method="post" style="display: inline-block">
                 <button type="submit">All questions</button>

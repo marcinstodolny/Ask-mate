@@ -1,4 +1,10 @@
 {% extends "base.html" %}
-{% block action %}/comment/{{ comment.id }}/edit{% endblock %}
-{% block message %}{{ comment.message }}{% endblock %}
+{% block action %}/comment/{{ comment.id }}/{{ question }}/edit{% endblock %}
+{% block message %}Message:{% endblock %}
+{% block message_area %}{{ comment.message }}{% endblock %}
 {% block button %}{{ title }}{% endblock %}
+{% block back_button %}
+    <form action="/question/{{ question }}" method="post">
+        <button type="submit">Back to question</button>
+    </form>
+{% endblock %}

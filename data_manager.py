@@ -18,13 +18,17 @@ import database_common
 
 
 @database_common.connection_handler
-def add_new_question(cursor, submission_time, view_number, vote_number, title, message, image):
+def add_new_question(
+    cursor, submission_time, view_number, vote_number, title, message, image
+):
     query = """
                 INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
                 VALUES (%s, %s, %s, %s, %s, %s)
                 """
 
-    cursor.execute(query, [submission_time, view_number, vote_number, title, message, image])
+    cursor.execute(
+        query, [submission_time, view_number, vote_number, title, message, image]
+    )
 
 
 @database_common.connection_handler
@@ -173,14 +177,13 @@ def get_sorted_data(cursor, sort_by, order_by, limit):
 
 
 @database_common.connection_handler
-def get_comments_by_question_id(cursor, question_id):
+def get_comments(cursor):
     query = """
             SELECT *
             FROM comment
-            WHERE question_id = %s
             ORDER BY id DESC;
             """
-    cursor.execute(query, [question_id])
+    cursor.execute(query)
     return cursor.fetchall()
 
 
@@ -201,7 +204,7 @@ def delete_answer(cursor, answer_id):
 
 
 @database_common.connection_handler
-def search_questions(cursor, sentence):
+def search_question_title(cursor, sentence):
     searching_phrase = f"%{sentence}%"
     query = """
         SELECT DISTINCT question.id, question.title, question.submission_time, question.view_number, question.vote_number
@@ -209,6 +212,30 @@ def search_questions(cursor, sentence):
         FULL OUTER JOIN answer ON question.id = answer.question_id
         WHERE title LIKE %s or question.message LIKE %s or answer.message LIKE %s"""
     cursor.execute(query, [searching_phrase, searching_phrase, searching_phrase])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def search_answer(cursor, sentence):
+    searching_phrase = f"%{sentence}%"
+    query = """
+            SELECT DISTINCT answer.question_id, answer.message
+            FROM question
+            FULL OUTER JOIN answer ON question.id = answer.question_id
+            WHERE answer.message LIKE %s"""
+    cursor.execute(query, [searching_phrase])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def search_question_message(cursor, sentence):
+    searching_phrase = f"%{sentence}%"
+    query = """
+            SELECT DISTINCT question.id, question.message
+            FROM question
+            FULL OUTER JOIN answer ON question.id = answer.question_id
+            WHERE question.message LIKE %s"""
+    cursor.execute(query, [searching_phrase])
     return cursor.fetchall()
 
 
@@ -250,20 +277,10 @@ def remove_images(cursor, question_id):
             """
     cursor.execute(query, [question_id])
     answer = cursor.fetchall()
-    way = (os.path.abspath(f"static\\upload\\"))
-    for image in (question + answer):
+    way = os.path.abspath(f"static\\upload\\")
+    for image in question + answer:
         if os.path.exists(f"{way}\\{image['image']}"):
             os.remove(f"{way}\\{image['image']}")
-
-
-@database_common.connection_handler
-def update_question_time(cursor, time, question_id):
-    query = """
-                UPDATE question
-                SET submission_time = %s
-                WHERE id = %s;
-                """
-    cursor.execute(query, [time, question_id])
 
 
 @database_common.connection_handler
@@ -274,6 +291,7 @@ def get_comment_by_id(cursor, comment_id):
                 where id = %s
                 """
     cursor.execute(query, [comment_id])
+    return cursor.fetchall()
 
 
 @database_common.connection_handler
@@ -344,12 +362,35 @@ def update_comment(cursor, comment_id, message, time):
     cursor.execute(query, [message, time, comment_id])
 
 
+@database_common.connection_handler
+def get_tag_names_and_tags_occurs(cursor):
+    query = """
+        SELECT tag.name, COUNT(question_tag.tag_id) AS occurrence_numbers
+        FROM question_tag
+        LEFT JOIN tag ON question_tag.tag_id = tag.id
+        GROUP BY question_tag.tag_id, tag.name
+        ORDER BY occurrence_numbers DESC"""
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
 def save_photo(img, id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\"))
+    way = os.path.abspath(f"static\\upload\\")
     img.save(f"{way}\\{folder}\\{id_index}.png")
 
 
 def remove_photo(id_index, folder):
-    way = (os.path.abspath(f"static\\upload\\{folder}\\"))
+    way = os.path.abspath(f"static\\upload\\{folder}\\")
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
+
+# get question with microseconds - more secure version of get id by time
+# data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
+# @database_common.connection_handler
+# def update_time(cursor, table, time, question_id):
+#     query = """
+#                 UPDATE question
+#                 SET submission_time = %s
+#                 WHERE id = %s;
+#                 """
+#     cursor.execute(query, [time, question_id])

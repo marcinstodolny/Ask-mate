@@ -1,24 +1,30 @@
+a:visited, a:link {
+        text-decoration: none;
+    }
+
 #center{
     text-align: center;
 }
 .tab{
     margin-left: 100px;
 }
-.multi_tab{
-    margin-left: 250px;
-}
 #message{
     font-size: 35px;
+    margin-left: 12%;
+    margin-right: 12%;
 }
 #message2{
     font-size: 20px;
 }
 #info{
-    font-size: 18px
+    font-size: 18px;
+    display: inline-block;
 }
 #title{
     font-size: 50px;
     word-break:break-word;
+    margin-left: 12%;
+    margin-right: 12%;
 }
 tr, td{
     word-wrap:break-word;
@@ -36,10 +42,74 @@ table{
 display: block;
 }
 
-#tags {
+.tags {
+    font-size: 18px;
     text-align: center;
+    display: inline;
 }
 
-.tab25px {
+#tab25px {
     margin-left: 25px;
+}
+
+#question_table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#question_table td, #question_table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#question_table tr:nth-child(odd) {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+#question_table tr:nth-child(even) {
+    background-color: #eee9e9;
+}
+
+#question_table tr:hover {
+    background-color: #a7b4e2;
+}
+
+#question_table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #a0b2ea;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+mark {
+    background-color: turquoise;
+}
+
+.tag_button {
+    background-color: #a7b4e2;
+    color: white;
+    border-radius: 5px;
+    font-size: 18px;
+}
+
+button, .inputs {
+    background-color: #a0b2ea;
+    border: none;
+    color: #343434;
+    padding: 8px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    transition-duration: 0.4s;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+button:hover, .inputs:hover{
+    box-shadow: 0 10px 15px 0 rgba(0,0,0,0.24),0 10px 20px 0 rgba(0,0,0,0.19);
 }

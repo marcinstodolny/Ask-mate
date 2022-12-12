@@ -394,3 +394,14 @@ def remove_photo(id_index, folder):
 #                 WHERE id = %s;
 #                 """
 #     cursor.execute(query, [time, question_id])
+
+
+@database_common.connection_handler
+def get_users_list(cursor):
+    query = """
+                SELECT *
+                FROM users
+                ORDER BY id DESC;
+                """
+    cursor.execute(query)
+    return cursor.fetchall()

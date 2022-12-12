@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+        body{
+             text-align: center;
+        }
+</style>
+<head>
+    <link rel="stylesheet" href="static/style.css">
+    <meta charset="UTF-8">
+    <title>ASK MATE by Marcin, Marcin & Tomek</title>
+</head>
+    <body>
+        <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
+        <table id="users_list">
+            <tr>
+                <th><b>User name</b></th>
+                <th><b>Registration date</b></th>
+                <th><b>Number of asked questions</b></th>
+                <th><b>Number of answers</b></th>
+                <th><b>Number of comments</b></th>
+                <th><b>Reputation</b></th>
+            </tr>
+        {% for user in users %}
+            <tr>
+                <td><a href="/user/{{user.id}}">{{user.username}}</a></td>
+                <td>{{user.registration_date}}</td>
+                <td>{{user.questions_no}}</td>
+                <td>{{user.answers_no}}</td>
+                <td>{{user.comments_no}}</td>
+                <td>{{user.reputation}}</td>
+            </tr>
+            {% endfor %}
+        </table><br>
+        <div>
+            <form action="/" method="post">
+                <button type="submit">Back to main page</button>
+            </form>
+        </div>
+        <footer>
+            <br>
+            <p>© 2022 Marcin, Marcin & Tomek</p>
+        </footer>
+    </body>
+</html>

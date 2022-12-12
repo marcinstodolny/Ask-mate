@@ -256,11 +256,11 @@ def tags():
 
 @app.route('/users', methods=['GET', 'POST'])
 def list_users():
-    if session["name"] != None:
+    if is_login():
         users_list = data_manager.get_users_list()
-        return render_template('users_list.html_list.html', users=users_list)
+        return render_template('users_list.html', users=users_list)
     else:
-        redirect("/")
+        return redirect("/")
 
 
 

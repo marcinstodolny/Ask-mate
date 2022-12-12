@@ -68,6 +68,11 @@
             <form action="/list" method="post" style="display: inline-block">
                 <button type="submit">All questions</button>
             </form>
+            {% if message %}
+            <form action="/users" method="post" style="display: inline-block">
+                <button type="submit">All users</button>
+            </form>
+            {% endif %}
             <span class="tab"></span>
             <form action="/tags" method="post" style="display: inline-block">
                 <button type="submit">Tags list</button>

@@ -35,9 +35,10 @@ CREATE TABLE users (
     username varchar(20),
     password text,
     reputation integer,
-    questions text,
-    answers text,
-    comments text
+    questions_no integer,
+    answers_no integer,
+    comments_no integer,
+    registration_date date
 );
 
 DROP TABLE IF EXISTS public.answer;

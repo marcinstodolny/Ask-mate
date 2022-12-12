@@ -397,11 +397,11 @@ def is_user_exist(cursor, username):
 
 
 @database_common.connection_handler
-def insert_new_user(cursor, username, password):
+def insert_new_user(cursor, username, password, time):
     query = """
-        INSERT INTO users (username, password, reputation)
-        VALUES (%s, %s, 0)"""
-    cursor.execute(query, [username, password])
+        INSERT INTO users (username, password, reputation, registration_date)
+        VALUES (%s, %s, 0, %s)"""
+    cursor.execute(query, [username, password, time])
 
 
 def save_photo(img, id_index, folder):

@@ -266,7 +266,8 @@ def registration():
                 message = "Entered password are not the same!"
             else:
                 hashed_password = password_management.hash_password(request.form.get('password'))
-                data_manager.insert_new_user(user_name, hashed_password)
+                time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                data_manager.insert_new_user(user_name, hashed_password, time)
                 return redirect('/')
         return render_template('registration.html', message=message)
     return render_template('registration.html')

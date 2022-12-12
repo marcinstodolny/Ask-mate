@@ -37,7 +37,7 @@ def is_login():
 
 
 def is_registered(username):
-    return data_manager.check_user(username)
+    return data_manager.is_user_exist(username)
 
 
 @app.route("/login", methods=['POST', 'GET'])
@@ -87,8 +87,8 @@ def display_question(question_id):
 def add_question():
     if request.method != 'POST':
         return render_template('add_question.html', title="Add question", login=is_login())
-    question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if is_login():
+        question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
         question_id = data_manager.get_question_id_by_time(question_time)[0]['id']
         if request.files["file"]:
@@ -164,8 +164,8 @@ def edit_comment(comment_id, question_id):
     comment = data_manager.get_comment_by_id(comment_id)[0]
     if request.method != 'POST':
         return render_template('edit_comment.html', title="Edit comment", comment=comment, question=question_id, login=is_login())
-    submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if is_login():
+        submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data_manager.update_comment(comment_id, request.form['message'], submission_time)
     return redirect(f"/question/{question_id}")
 

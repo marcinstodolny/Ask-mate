@@ -386,7 +386,7 @@ def get_user_password(cursor, username):
 
 
 @database_common.connection_handler
-def check_user(cursor, username):
+def is_user_exist(cursor, username):
     query = """
                 SELECT username
                 FROM users
@@ -394,6 +394,14 @@ def check_user(cursor, username):
                 """
     cursor.execute(query, [username])
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def insert_new_user(cursor, username, password, time):
+    query = """
+        INSERT INTO users (username, password, reputation, registration_date)
+        VALUES (%s, %s, 0, %s)"""
+    cursor.execute(query, [username, password, time])
 
 
 def save_photo(img, id_index, folder):

@@ -35,9 +35,9 @@ CREATE TABLE users (
     username varchar(20),
     password text,
     reputation integer,
-    questions_no text,
-    answers_no text,
-    comments_no text,
+    questions_no integer,
+    answers_no integer,
+    comments_no integer,
     registration_date date
 );
 

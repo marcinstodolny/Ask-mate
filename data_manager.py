@@ -386,7 +386,7 @@ def get_user_password(cursor, username):
 
 
 @database_common.connection_handler
-def check_user(cursor, username):
+def is_user_exist(cursor, username):
     query = """
                 SELECT username
                 FROM users

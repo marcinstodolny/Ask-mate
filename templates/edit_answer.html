@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block action %}/answer/{{ answer.id }}/edit{% endblock %}
+{% block message %}Message:{% endblock %}
+{% block message_area %}{{ answer.message }}{% endblock %}
+{% block add_file %}<input type="file" name="file" id="file">{% endblock %}
+{% block button %}{{ title }}{% endblock %}
+{% block back_button %}
+    <form action="/question/{{ answer.question_id }}" method="post">
+        <button type="submit">Back to question</button>
+    </form>
+{% endblock %}

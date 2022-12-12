@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}{{ title }}{% endblock %}
+{% block action %}/question/{{ question.id }}/edit{% endblock %}
+{% block title_area %}
+    <label for="title">Title:</label><br>
+    <label>
+        <input type="text" name="title" required value="{{ question.title }}">
+    </label><br><br>
+{% endblock %}
+{% block message %}Message:{% endblock %}
+{% block message_area %}{{ question.message }}{% endblock %}
+{% block add_file %}<input type="file" name="file" id="file">{% endblock %}
+{% block button %}{{ title }}{% endblock %}
+{% block back_button %}
+    <form action="/question/{{ question.id }}" method="post">
+        <button type="submit">Back to question</button>
+    </form>
+{% endblock %}

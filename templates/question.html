@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<link rel="stylesheet" href="/static/style.css">
+<head>
+    <meta charset="UTF-8">
+    <title>ASK MATE by Marcin, Marcin, Basia & Tomek</title>
+</head>
+    <body>
+        <div id="center">
+            <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
+            <br>
+            <p id="title"><strong>{{ question.title |safe}}</strong></p>
+            <p id="info">
+                Asked {{ question.submission_time }} ago
+                <span class="tab"></span>
+                Viewed {{ question.view_number }}
+                <span class="tab"></span>
+                Vote number
+                <form action="/question/{{ question.id }}/vote-up" method="post" style="display: inline-block">
+                    <input class="inputs" type="submit" value="&#8593" name="vote_up">
+                </form>
+                {{ question.vote_number }}
+                <form action="/question/{{ question.id }}/vote-down" method="post" style="display: inline-block">
+                    <input class="inputs" type="submit" value="&#8595" name="vote_down">
+                </form>
+            </p>
+        </div>
+        <div id="center" style="margin-right: 175px">
+            <form style="display:inline-block" action="/question/{{ question.id }}/edit" method="get">
+                <button type="submit">Edit question</button>
+            </form>
+            <span class="tab"></span>
+            <form style="display:inline-block" action="/question/{{ question.id }}/delete" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </div><br>
+        <div id="center">
+            <p id="message">{{ question.message |safe}}</p>
+            <img src="/static/upload/{{ question.image }}" alt="" width="800">
+        </div>
+        <div class="tags">
+            <form action="/tags" method="post">
+                <a style="text-align: center" href="/question/{{ question.id }}/new-tag">Add tag</a>
+                {% for tag in tags %}
+                    <span id="tab25px"></span>
+                    <button class="tag_button" type="submit">{{ tag.name }}</button>
+                    <a href="/question/{{ question.id }}/tag/{{ tag.id }}/delete">X</a>
+                {% endfor %}
+            </form>
+        </div>
+        <div id="center">
+            <table>
+            {% for comment in comments %}
+                {% if question.id == comment.question_id %}
+                    <tr>
+                        <td style="padding-top: 20px" id="message2">{{ comment.message |safe}}</td>
+                    </tr>
+                    <tr style="font-size: 13px">
+                        <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                       <td>
+                           <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
+                                <button type="submit">Edit</button>
+                           </form>
+                       </td>
+                        <td>
+                            <form action="/comments/{{ comment.id }}/{{ question.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
+                                <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr style="border: solid gray; border-width: 1px 0"></tr>
+                {% endif     %}
+            {% endfor %}
+        </table>
+        </div>
+        <div id="center" style="margin-right: 925px;">
+                <form action="/question/{{ question.id }}/new-comment">
+                    <input class="inputs" type="submit" value="Add comment" name="comment">
+                </form>
+        </div>
+        <br>
+        <div>
+        <table >
+            {% for answer in answers %}
+                    <tr>
+                        <td style=" padding-top: 20px" id="message2">{{ answer.message |safe}}</td>
+                    </tr>
+                    <tr>
+                    <td class="image"><a href="/static/upload/{{ answer.image }}"><img id="image3" src="/static/upload/{{ answer.image }}" alt="" width="400"></a></td>
+                    </tr>
+                    <tr style="font-size: 13px">
+                        <td>Answered: {{ answer.submission_time }}</td>
+                        <td>
+                            <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-up" method="post" style="display: inline-block">
+                                <input class="inputs" type="submit" value="&#8593" name="vote_up">
+                            </form>
+                                <span class="number">{{ answer.vote_number }}</span>
+                            <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-down" method="post" style="display: inline-block">
+                                <input class="inputs" type="submit" value="&#8595" name="vote_down">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/answer/{{ answer.id }}/edit" method="get">
+                                <button type="submit">Edit</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/answer/{{ answer.id }}/delete" method="post">
+                                <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
+                            </form>
+                        </td>
+                        <td>
+                            <form action="/answer/{{ answer.id }}/new-comment">
+                                <input class="inputs" type="submit" value="Add comment" name="comment">
+                            </form>
+                        </td>
+                    </tr>
+                    <tr style="border: solid gray; border-width: 1px 0"></tr>
+                    {% for comment in comments %}
+                        {% if answer.id == comment.answer_id %}
+                            <tr>
+                                <td style="padding-top: 20px" id="message2">{{ comment.message |safe}}</td>
+                            </tr>
+                            <tr style="font-size: 13px">
+                                <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                               <td>
+                                   <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
+                                        <button type="submit">Edit</button>
+                                   </form>
+                                </td>
+                                   <td>
+                                    <form action="/comments/{{ comment.id }}/{{ question.id }}/delete" method="post" onsubmit="return confirm('Are you sure you wish to delete?')">
+                                        <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr style="border: solid gray; border-width: 1px 0"></tr>
+                        {% endif %}
+                    {% endfor %}
+                    <tr style="border: solid black; border-width: 2px 0"></tr>
+            {% endfor %}
+        </table>
+        </div>
+        <footer id="center">
+            <div style="margin-right: 925px;"><br><br>
+            <form action="/question/{{ question.id }}/new-answer">
+                <input class="inputs" type="submit" value="Add answer" name="answer">
+            </form><br>
+                </div>
+            <form action="/">
+                <button type="submit">Back to main page</button>
+            </form>
+            <p>© 2022 Marcin, Marcin, Basia & Tomek</p>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block header %}{{ title }}{% endblock %}
+{% block action %}/question/{{ question_id }}/new-tag{% endblock %}
+{% block message %}Tag name:{% endblock %}
+{% block button %}{{ title }}{% endblock %}
+{% block back_button %}
+    <form action="/question/{{ question_id }}" method="post">
+        <button type="submit">Back to question</button>
+    </form>
+{% endblock %}

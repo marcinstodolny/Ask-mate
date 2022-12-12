@@ -12,10 +12,20 @@
 </head>
     <body>
         <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
+        {% if message %}
+        {{message}}<br>
+        <form action="/logout" id="logout">
+        <button type="submit">Logout</button>
+         </form>
         <form action="/add_question" method="get" style="display: inline-block">
-            <button type="submit">Add new question</button>
-            <span style="margin-left: 50px"></span>
+        <button type="submit">Add new question</button>
+        <span style="margin-left: 50px"></span>
         </form>
+        {% else %}
+        <form action="/login" id="login-page">
+        <button type="submit">Login</button>
+         </form>
+        {% endif %}
         <form action="/list" style="display: inline-block">
             <label for="sort_by">Sort by:</label>
             <select name="sort_by" id="sort_by">

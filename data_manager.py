@@ -396,6 +396,14 @@ def is_user_exist(cursor, username):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def insert_new_user(cursor, username, password):
+    query = """
+        INSERT INTO users (username, password, reputation)
+        VALUES (%s, %s, 0)"""
+    cursor.execute(query, [username, password])
+
+
 def save_photo(img, id_index, folder):
     way = os.path.abspath(f"static\\upload\\")
     img.save(f"{way}\\{folder}\\{id_index}.png")

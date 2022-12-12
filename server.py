@@ -2,11 +2,13 @@ from bonus_questions import SAMPLE_QUESTIONS
 import datetime
 import data_manager
 import util
+import password_management
 
 from flask import Flask, request, render_template, redirect
 
 
 app = Flask(__name__)
+app.secret_key = b'ask-mate-3'
 
 
 @app.route("/bonus-questions")

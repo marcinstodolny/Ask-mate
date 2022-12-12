@@ -255,6 +255,23 @@ def tags():
     return render_template('tags_list.html', tags_list=tags_list)
 
 
+@app.route('/registration', methods=['GET', 'POST'])
+def registration():
+    if request.method == 'POST':
+        user_name = request.form.get('user-name')
+        if data_manager.is_user_exist(user_name):
+            message = "This user name exist!"
+        else:
+            if request.form.get('password') != request.form.get('confirm-password'):
+                message = "Entered password are not the same!"
+            else:
+                hashed_password = password_management.hash_password(request.form.get('password'))
+                data_manager.insert_new_user(user_name, hashed_password)
+                return redirect('/')
+        return render_template('registration.html', message=message)
+    return render_template('registration.html')
+
+
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',

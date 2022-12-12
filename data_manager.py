@@ -374,6 +374,28 @@ def get_tag_names_and_tags_occurs(cursor):
     return cursor.fetchall()
 
 
+@database_common.connection_handler
+def get_user_password(cursor, username):
+    query = """
+            SELECT password
+            FROM users
+            WHERE username = %s
+            """
+    cursor.execute(query, [username])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def check_user(cursor, username):
+    query = """
+                SELECT username
+                FROM users
+                WHERE username = %s
+                """
+    cursor.execute(query, [username])
+    return cursor.fetchall()
+
+
 def save_photo(img, id_index, folder):
     way = os.path.abspath(f"static\\upload\\")
     img.save(f"{way}\\{folder}\\{id_index}.png")
@@ -383,6 +405,9 @@ def remove_photo(id_index, folder):
     way = os.path.abspath(f"static\\upload\\{folder}\\")
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
+
+
+
 
 # get question with microseconds - more secure version of get id by time
 # data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)

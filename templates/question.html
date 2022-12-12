@@ -8,6 +8,9 @@
     <body>
         <div id="center">
             <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
+            {% if message %}
+                <br>{{message}}<br>
+            {% endif %}
             <br>
             <p id="title"><strong>{{ question.title |safe}}</strong></p>
             <p id="info">
@@ -16,15 +19,20 @@
                 Viewed {{ question.view_number }}
                 <span class="tab"></span>
                 Vote number
+                {% if message %}
                 <form action="/question/{{ question.id }}/vote-up" method="post" style="display: inline-block">
                     <input class="inputs" type="submit" value="&#8593" name="vote_up">
                 </form>
+                {% endif %}
                 {{ question.vote_number }}
+                {% if message %}
                 <form action="/question/{{ question.id }}/vote-down" method="post" style="display: inline-block">
                     <input class="inputs" type="submit" value="&#8595" name="vote_down">
                 </form>
+                {% endif %}
             </p>
         </div>
+        {% if message %}
         <div id="center" style="margin-right: 175px">
             <form style="display:inline-block" action="/question/{{ question.id }}/edit" method="get">
                 <button type="submit">Edit question</button>
@@ -34,17 +42,22 @@
                 <button type="submit">Delete</button>
             </form>
         </div><br>
+        {% endif %}
         <div id="center">
             <p id="message">{{ question.message |safe}}</p>
             <img src="/static/upload/{{ question.image }}" alt="" width="800">
         </div>
         <div class="tags">
             <form action="/tags" method="post">
+                {% if message %}
                 <a style="text-align: center" href="/question/{{ question.id }}/new-tag">Add tag</a>
+                {% endif %}
                 {% for tag in tags %}
                     <span id="tab25px"></span>
                     <button class="tag_button" type="submit">{{ tag.name }}</button>
+                    {% if message %}
                     <a href="/question/{{ question.id }}/tag/{{ tag.id }}/delete">X</a>
+                    {% endif %}
                 {% endfor %}
             </form>
         </div>
@@ -57,6 +70,7 @@
                     </tr>
                     <tr style="font-size: 13px">
                         <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                        {% if message %}
                        <td>
                            <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
                                 <button type="submit">Edit</button>
@@ -67,17 +81,20 @@
                                 <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
                             </form>
                         </td>
+                            {% endif %}
                     </tr>
                     <tr style="border: solid gray; border-width: 1px 0"></tr>
                 {% endif     %}
             {% endfor %}
         </table>
         </div>
+        {% if message %}
         <div id="center" style="margin-right: 925px;">
                 <form action="/question/{{ question.id }}/new-comment">
                     <input class="inputs" type="submit" value="Add comment" name="comment">
                 </form>
         </div>
+        {% endif %}
         <br>
         <div>
         <table >
@@ -91,14 +108,19 @@
                     <tr style="font-size: 13px">
                         <td>Answered: {{ answer.submission_time }}</td>
                         <td>
+                            {% if message %}
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-up" method="post" style="display: inline-block">
                                 <input class="inputs" type="submit" value="&#8593" name="vote_up">
                             </form>
+                            {% endif %}
                                 <span class="number">{{ answer.vote_number }}</span>
+                            {% if message %}
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-down" method="post" style="display: inline-block">
                                 <input class="inputs" type="submit" value="&#8595" name="vote_down">
                             </form>
+                            {% endif %}
                         </td>
+                        {% if message %}
                         <td>
                             <form action="/answer/{{ answer.id }}/edit" method="get">
                                 <button type="submit">Edit</button>
@@ -114,6 +136,7 @@
                                 <input class="inputs" type="submit" value="Add comment" name="comment">
                             </form>
                         </td>
+                    {% endif %}
                     </tr>
                     <tr style="border: solid gray; border-width: 1px 0"></tr>
                     {% for comment in comments %}
@@ -123,6 +146,7 @@
                             </tr>
                             <tr style="font-size: 13px">
                                 <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                                {% if message %}
                                <td>
                                    <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
                                         <button type="submit">Edit</button>
@@ -133,6 +157,7 @@
                                         <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
                                     </form>
                                 </td>
+                                    {% endif %}
                             </tr>
                             <tr style="border: solid gray; border-width: 1px 0"></tr>
                         {% endif %}
@@ -142,11 +167,13 @@
         </table>
         </div>
         <footer id="center">
+            {% if message %}
             <div style="margin-right: 925px;"><br><br>
             <form action="/question/{{ question.id }}/new-answer">
                 <input class="inputs" type="submit" value="Add answer" name="answer">
             </form><br>
                 </div>
+            {% endif %}
             <form action="/">
                 <button type="submit">Back to main page</button>
             </form>

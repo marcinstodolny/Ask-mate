@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login form</title>
+</head>
+<body>
+    <form action='/login_attempt' method="post">
+        {% if message %}
+        {{message}}<br>
+        {% endif %}
+        <label for="username">Username: </label>
+        <input type="text" name="username" id="username" required>
+        <label for="password">Password: </label>
+        <input type="password" name="password" id="password" required>
+        <input type="submit" value="login">
+    </form>
+</body>
+</html>

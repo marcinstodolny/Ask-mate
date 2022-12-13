@@ -13,7 +13,8 @@
     <body>
         <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
         {% if message %}
-        {{message}}<br> <a href = "/user/{{session['id']}}">User profile</a>
+        {{message}}<br>
+        <a href = "/user/{{ session['id'] }}">User profile</a>
         <form action="/logout" id="logout">
         <button type="submit">Logout</button>
          </form>

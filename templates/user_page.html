@@ -59,7 +59,11 @@
                             {% if comment.answer_id == None %}
                         <a href="/question/{{comment.question_id}}">{{comment.message}}</a><br><br>
                             {% else %}
-                        <a href="/question/{{comment.question_id}}">{{comment.message}}</a><br><br>
+                                {% for q_id_in_answers in answer_id_to_question_id %}
+                                    {% if q_id_in_answers.id == comment.answer_id%}
+                        <a href="/question/{{q_id_in_answers.question_id}}">{{comment.message}}</a><br><br>
+                                    {% endif %}
+                                {% endfor %}
                             {% endif %}
                         {% endfor %}
                     </p>

@@ -254,13 +254,13 @@ def tags():
     tags_list = data_manager.get_tag_names_and_tags_occurs()
     return render_template('tags_list.html', tags_list=tags_list)
 
+
 @app.route('/users', methods=['GET', 'POST'])
 def list_users():
-    if is_login():
-        users_list = data_manager.get_users_list()
-        return render_template('users_list.html', users=users_list)
-    else:
+    if not is_login():
         return redirect("/")
+    users_list = data_manager.get_users_list()
+    return render_template('users_list.html', users=users_list)
 
 
 @app.route('/registration', methods=['GET', 'POST'])

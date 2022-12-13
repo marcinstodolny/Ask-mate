@@ -56,12 +56,15 @@
                     <p style="font-size:18px">Commented messages:</p>
                     <p style="font-size:14px">
                         {% for comment in comments %}
+                            {% if comment.answer_id == None %}
                         <a href="/question/{{comment.question_id}}">{{comment.message}}</a><br><br>
+                            {% else %}
+                        <a href="/question/{{comment.question_id}}">{{comment.message}}</a><br><br>
+                            {% endif %}
                         {% endfor %}
                     </p>
                 </td>
             </tr>
-            {% endfor %}
         </table><br>
         <div>
             <form action="/" method="post">

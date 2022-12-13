@@ -280,6 +280,15 @@ def registration():
         return render_template('registration.html', message=message)
     return render_template('registration.html')
 
+@app.route('/user/<user_id>', methods=['GET', 'POST'])
+def user_page(user_id):
+    if not is_login():
+        return redirect("/")
+    user_data = data_manager.get_user_data(user_id)
+    questions = data_manager.get_user_questions(user_id)
+    answers = data_manager.get_user_answers(user_id)
+    comments = data_manager.get_user_comments(user_id)
+    return render_template('user_page.html', users=user_data, questions=questions, answers=answers, comments=comments)
 
 if __name__ == '__main__':
     app.run(

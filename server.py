@@ -16,18 +16,20 @@ def main():
     return render_template('bonus_questions.html', questions=SAMPLE_QUESTIONS)
 
 
-@app.route("/list", methods=['POST', 'GET'])
+@app.route("/list")
 def all_questions():
     sort_by = request.args.get('sort_by')
     order_by = request.args.get('order_by')
     questions = util.sort_list() if sort_by is None else util.sort_list(sort_by, order_by)
+    if is_login():
+        return render_template('index.html', message=f"Logged in as {escape(session['username'])}", questions=questions, sort=sort_by, order=order_by)
     return render_template('index.html', questions=questions, sort=sort_by, order=order_by)
 
 
 @app.route("/", methods=['POST', 'GET'])
 def main_page():
     questions = util.sort_list(limit='LIMIT 5')
-    if 'username' in session:
+    if is_login():
         return render_template('index.html', message=f"Logged in as {escape(session['username'])}", questions=questions)
     return render_template('index.html', questions=questions)
 
@@ -51,6 +53,7 @@ def login_attempt():
         username = request.form['username']
         if is_registered(username) and password_management.verify_password(request.form.get('password'), data_manager.get_user_password(username)[0]['password']):
             session['username'] = username
+            session['id'] = data_manager.get_user_id(session['username'])[0]['id']
             return redirect(url_for('main_page'))
     return render_template('login.html', message='Invalid login attempt')
 
@@ -58,6 +61,7 @@ def login_attempt():
 @app.route('/logout')
 def logout():
     session.pop('username', None)
+    session.pop('id', None)
     return redirect(url_for('main_page'))
 
 
@@ -89,7 +93,7 @@ def add_question():
         return render_template('add_question.html', title="Add question", login=is_login())
     if is_login():
         question_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        data_manager.add_new_question(question_time, 0, 0, request.form['title'], request.form['message'], None)
+        data_manager.add_new_question(session['id'], question_time, 0, 0, request.form['title'], request.form['message'], None)
         question_id = data_manager.get_question_id_by_time(question_time)[0]['id']
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], question_id, 'question')
@@ -123,9 +127,11 @@ def delete_question(question_id):
 @app.route("/answer/<answer_id>/<question_id>/vote-up", methods=["POST"])
 def up_vote(question_id, answer_id=None):
     if answer_id and is_login():
-        data_manager.change_vote_number(answer_id, 'answer', 1)
+        data_manager.change_vote_number(answer_id, 'answer', 1, session['id'])
+        data_manager.change_reputation(answer_id, 'answer', 10, session['id'])
     elif is_login():
-        data_manager.change_vote_number(question_id, 'question', 1)
+        data_manager.change_vote_number(question_id, 'question', 1, session['id'])
+        data_manager.change_reputation(question_id, 'question', 5, session['id'])
     return redirect(f"/question/{question_id}")
 
 
@@ -133,9 +139,11 @@ def up_vote(question_id, answer_id=None):
 @app.route("/answer/<answer_id>/<question_id>/vote-down", methods=["POST"])
 def down_vote(question_id, answer_id=None):
     if answer_id and is_login():
-        data_manager.change_vote_number(answer_id, 'answer', -1)
+        data_manager.change_vote_number(answer_id, 'answer', -1, session['id'])
+        data_manager.change_reputation(answer_id, 'answer', -2, session['id'])
     elif is_login():
-        data_manager.change_vote_number(question_id, 'question', -1)
+        data_manager.change_vote_number(question_id, 'question', -1, session['id'])
+        data_manager.change_reputation(question_id, 'question', -2, session['id'])
     return redirect(f"/question/{question_id}")
 
 
@@ -144,7 +152,7 @@ def add_comment_to_question(question_id=None):
     if request.method != 'POST':
         return render_template('add_comment_q.html', title="Add comment", question_id=question_id, login=is_login())
     if is_login():
-        data_manager.new_comment(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        data_manager.new_comment(session['id'], datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                  request.form['message'], 0, question_id=question_id)
     return redirect(f"/question/{question_id}")
 
@@ -154,7 +162,7 @@ def add_comment_to_answer(answer_id=None):
     if request.method != 'POST':
         return render_template('add_comment_a.html', title="Add comment", answer_id=answer_id, login=is_login())
     if is_login():
-        data_manager.new_comment(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), request.form['message'], 0,
+        data_manager.new_comment(session['id'], datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), request.form['message'], 0,
                                  answer_id=answer_id)
     return redirect(f"/question/{data_manager.get_question_id_by_answer_id(answer_id)[0]['question_id']}")
 
@@ -186,7 +194,7 @@ def add_answer(question_id):
                                login=is_login())
     submission_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     if is_login():
-        data_manager.new_answer(submission_time, 0, question_id, request.form['message'], None)
+        data_manager.new_answer(session['id'], submission_time, 0, question_id, request.form['message'], None)
         answer_id = data_manager.get_answer_id_by_time(submission_time)[0]['id']
         if request.files["file"]:
             data_manager.save_photo(request.files["file"], answer_id, 'answer')
@@ -249,18 +257,18 @@ def delete_tag(question_id, tag_id):
     return redirect(f"/question/{question_id}")
 
 
-@app.route('/tags', methods=['GET', 'POST'])
+@app.route('/tags')
 def tags():
     tags_list = data_manager.get_tag_names_and_tags_occurs()
     return render_template('tags_list.html', tags_list=tags_list)
 
-@app.route('/users', methods=['GET', 'POST'])
+
+@app.route('/users')
 def list_users():
-    if is_login():
-        users_list = data_manager.get_users_list()
-        return render_template('users_list.html', users=users_list)
-    else:
+    if not is_login():
         return redirect("/")
+    users_list = data_manager.get_users_list()
+    return render_template('users_list.html', users=users_list)
 
 
 @app.route('/registration', methods=['GET', 'POST'])

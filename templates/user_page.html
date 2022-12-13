@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+        body{
+             text-align: center;
+        }
+        th {
+             text-align: center;
+        }
+</style>
+<head>
+    <link rel="stylesheet" href="static/style.css">
+    <meta charset="UTF-8">
+    <title>ASK MATE - user page</title>
+</head>
+    <body>
+        <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
+        {% for user in users %}
+        <table id="user_page" >
+            <tr>
+                <td width="30%">
+                    {% if user.reputation < 100 %}
+                    <img src="/static/avatar_lvl1.png"><br><br>
+                    {% elif user.reputation >= 100 and user.reputation < 500 %}
+                    <img src="/static/avatar_lvl2.png"><br><br>
+                    {% elif user.reputation >= 500 and user.reputation < 1000 %}
+                    <img src="/static/avatar_lvl3.png"><br><br>
+                    {% elif user.reputation >= 1000 and user.reputation < 5000 %}
+                    <img src="/static/avatar_lvl4.png"><br><br>
+                    {% elif user.reputation >= 5000 %}
+                    <img src="/static/avatar_lvl5.png"><br><br>
+                    {% endif %}
+                    <p style="font-size:16px">{{user.username}}</p>
+                    <p style="font-size:12px">
+                    Reputation: <br><b>{{user.reputation}}</b><br>
+                    Registered on: <br><b>{{user.registration_date}}</b><br>
+                    Number of questions: <br><b>{{user.questions_no}}</b><br>
+                    Number of answers: <br><b>{{user.answers_no}}</b><br>
+                    Number of commentss: <br><b>{{user.comments_no}}</b><br>
+                    </p>
+                </td>
+            {% endfor %}
+                <td width="70%">
+                    <p style="font-size:18px">Asked questions:</p>
+                    <p style="font-size:14px">
+                        {% for question in questions %}
+                        <a href="/question/{{question.id}}">{{question.title}}</a><br><br>
+                        {% endfor %}
+                    </p>
+                    <p style="font-size:18px">Provided answers:</p>
+                    <p style="font-size:14px">
+                        {% for answer in answers %}
+                        <a href="/question/{{answer.question_id}}">{{answer.message}}</a><br><br>
+                        {% endfor %}
+                    </p>
+                    <p style="font-size:18px">Commented messages:</p>
+                    <p style="font-size:14px">
+                        {% for comment in comments %}
+                        <a href="/question/{{comment.question_id}}">{{comment.message}}</a><br><br>
+                        {% endfor %}
+                    </p>
+                </td>
+            </tr>
+            {% endfor %}
+        </table><br>
+        <div>
+            <form action="/" method="post">
+                <button type="submit">Back to main page</button>
+            </form>
+        </div>
+        <footer>
+            <br>
+            <p>© 2022 Marcin, Marcin & Tomek</p>
+        </footer>
+    </body>
+</html>

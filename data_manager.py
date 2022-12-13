@@ -162,29 +162,46 @@ def new_answer(cursor, user_id, time, vote, question_id, message, image):
 
 
 @database_common.connection_handler
-def change_vote_number(cursor, item_id, table, number, user_id):
+def get_already_voted_list(cursor, table, user_id):
     query = f"""
-                        UPDATE {table}
-                        SET 
-                        vote_number = vote_number + %s
-                        WHERE id = %s
-                        AND {table}.user_id != %s
-                        """
-    cursor.execute(query, [number, item_id, user_id])
+              SELECT {table}s_voted
+              FROM users
+              WHERE id = %s
+               """
+    cursor.execute(query, [user_id])
+    return cursor.fetchall()[0][f'{table}s_voted']
+
+
+@database_common.connection_handler
+def change_vote_number(cursor, item_id, table, number, user_id):
+    if int(item_id) not in get_already_voted_list(table, user_id):
+        query = f"""
+                            UPDATE {table}
+                            SET
+                            vote_number = vote_number + %s
+                            FROM users
+                            WHERE {table}.id = %s
+                            AND {table}.user_id != %s;
+                            UPDATE users
+                            SET {table}s_voted = ARRAY_APPEND({table}s_voted, %s)
+                            WHERE users.id = %s;
+                            """
+        cursor.execute(query, [number, item_id, user_id, int(item_id), user_id])
 
 
 @database_common.connection_handler
 def change_reputation(cursor, item_id, table, number, user_id):
-    query = f"""
-            UPDATE users
-            SET 
-                reputation = reputation + %s
-            FROM {table}
-            WHERE users.id = {table}.user_id
-            AND {table}.id = %s
-            AND users.id != %s
-            """
-    cursor.execute(query, [number, item_id, user_id])
+    if int(item_id) not in get_already_voted_list(table, user_id):
+        query = f"""
+                UPDATE users
+                SET 
+                    reputation = reputation + %s
+                FROM {table}
+                WHERE users.id = {table}.user_id
+                AND {table}.id = %s
+                AND users.id != %s
+                """
+        cursor.execute(query, [number, item_id, user_id])
 
 
 @database_common.connection_handler

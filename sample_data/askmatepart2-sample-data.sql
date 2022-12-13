@@ -38,7 +38,9 @@ CREATE TABLE users (
     questions_no integer,
     answers_no integer,
     comments_no integer,
-    registration_date date
+    registration_date date,
+    questions_voted integer ARRAY,
+    answers_voted integer ARRAY
 );
 
 DROP TABLE IF EXISTS public.answer;
@@ -119,7 +121,7 @@ ALTER TABLE ONLY answer
 ALTER TABLE ONLY comment
     ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
 
-INSERT INTO users VALUES (0, 'admin', '$2b$12$5/J3dRnIOPpRjbVnc835muntSETNgiG8b5lGOiXM4npi7nEhpiMpO', 0, 0, 0, 0);
+INSERT INTO users VALUES (0, 'admin', '$2b$12$5/J3dRnIOPpRjbVnc835muntSETNgiG8b5lGOiXM4npi7nEhpiMpO', 0, 0, 0, 0, '2022-12-13 14:49:35', array[]::integer[], array[]::integer[]);
 INSERT INTO question VALUES (0, 0, '2017-04-28 08:29:00', 29, 7, 'How to make lists in Python?', 'I am totally new to this, any hints?', NULL);
 INSERT INTO question VALUES (1, 0, '2017-04-29 09:19:00', 15, 9, 'Wordpress loading multiple jQuery Versions', 'I developed a plugin that uses the jquery booklet plugin (http://builtbywill.com/booklet/#/) this plugin binds a function to $ so I cann call $(".myBook").booklet();
 
@@ -150,4 +152,3 @@ SELECT pg_catalog.setval('tag_id_seq', 3, true);
 INSERT INTO question_tag VALUES (0, 1);
 INSERT INTO question_tag VALUES (1, 3);
 INSERT INTO question_tag VALUES (2, 3);
-

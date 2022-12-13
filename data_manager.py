@@ -19,15 +19,19 @@ import database_common
 
 @database_common.connection_handler
 def add_new_question(
-    cursor, submission_time, view_number, vote_number, title, message, image
+    cursor, user_id, submission_time, view_number, vote_number, title, message, image
 ):
     query = """
-                INSERT INTO question (submission_time, view_number, vote_number, title, message, image)
-                VALUES (%s, %s, %s, %s, %s, %s)
+                INSERT INTO question (user_id, submission_time, view_number, vote_number, title, message, image)
+                VALUES (%s, %s, %s, %s, %s, %s, %s);
+                UPDATE users
+                SET
+                questions_no = questions_no + 1
+                WHERE %s = id
                 """
 
     cursor.execute(
-        query, [submission_time, view_number, vote_number, title, message, image]
+        query, [user_id, submission_time, view_number, vote_number, title, message, image, user_id]
     )
 
 
@@ -146,22 +150,41 @@ def increment_view_number(cursor, question_id):
 
 
 @database_common.connection_handler
-def new_answer(cursor, time, vote, question_id, message, image):
+def new_answer(cursor, user_id, time, vote, question_id, message, image):
     query = """
-        INSERT INTO answer (submission_time, vote_number, question_id, message, image)
-        VALUES (%s, %s, %s, %s, %s)"""
-    cursor.execute(query, [time, vote, question_id, message, image])
+        INSERT INTO answer (user_id, submission_time, vote_number, question_id, message, image)
+        VALUES (%s, %s, %s, %s, %s, %s);
+        UPDATE users
+        SET
+        answers_no = answers_no + 1
+        WHERE %s = id"""
+    cursor.execute(query, [user_id, time, vote, question_id, message, image, user_id])
 
 
 @database_common.connection_handler
-def change_vote_number(cursor, question_id, table, number):
+def change_vote_number(cursor, item_id, table, number, user_id):
     query = f"""
                         UPDATE {table}
                         SET 
                         vote_number = vote_number + %s
-                        WHERE id = %s;
+                        WHERE id = %s
+                        AND {table}.user_id != %s
                         """
-    cursor.execute(query, [number, question_id])
+    cursor.execute(query, [number, item_id, user_id])
+
+
+@database_common.connection_handler
+def change_reputation(cursor, item_id, table, number, user_id):
+    query = f"""
+            UPDATE users
+            SET 
+                reputation = reputation + %s
+            FROM {table}
+            WHERE users.id = {table}.user_id
+            AND {table}.id = %s
+            AND users.id != %s
+            """
+    cursor.execute(query, [number, item_id, user_id])
 
 
 @database_common.connection_handler
@@ -188,11 +211,16 @@ def get_comments(cursor):
 
 
 @database_common.connection_handler
-def new_comment(cursor, time, message, edited_count, question_id=None, answer_id=None):
+def new_comment(cursor, user_id, time, message, edited_count, question_id=None, answer_id=None):
     query = """
-            INSERT INTO comment (submission_time, question_id, answer_id, message, edited_count)
-            VALUES (%s, %s, %s, %s, %s)"""
-    cursor.execute(query, [time, question_id, answer_id, message, edited_count])
+            INSERT INTO comment (user_id, submission_time, question_id, answer_id, message, edited_count)
+            VALUES (%s, %s, %s, %s, %s, %s);
+            UPDATE users
+            SET
+            comments_no = comments_no + 1
+            WHERE %s = id
+            """
+    cursor.execute(query, [user_id, time, question_id, answer_id, message, edited_count, user_id])
 
 
 @database_common.connection_handler
@@ -404,6 +432,28 @@ def insert_new_user(cursor, username, password, time):
     cursor.execute(query, [username, password, time])
 
 
+@database_common.connection_handler
+def get_user_id(cursor, username):
+    query = """
+        SELECT id
+        FROM users
+        WHERE username = %s
+        """
+    cursor.execute(query, [username])
+    return cursor.fetchall()
+
+
+@database_common.connection_handler
+def get_users_list(cursor):
+    query = """
+                SELECT *
+                FROM users
+                ORDER BY id DESC;
+                """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+
 def save_photo(img, id_index, folder):
     way = os.path.abspath(f"static\\upload\\")
     img.save(f"{way}\\{folder}\\{id_index}.png")
@@ -413,8 +463,6 @@ def remove_photo(id_index, folder):
     way = os.path.abspath(f"static\\upload\\{folder}\\")
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
-
-
 
 
 # get question with microseconds - more secure version of get id by time

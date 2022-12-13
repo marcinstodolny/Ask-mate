@@ -475,3 +475,54 @@ def remove_photo(id_index, folder):
 #                 WHERE id = %s;
 #                 """
 #     cursor.execute(query, [time, question_id])
+
+
+@database_common.connection_handler
+def get_users_list(cursor):
+    query = """
+                SELECT *
+                FROM users
+                ORDER BY id DESC;
+                """
+    cursor.execute(query)
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def get_user_data(cursor, user_id):
+    query = """
+                SELECT *
+                FROM users
+                WHERE id = %s;
+                """
+    cursor.execute(query, [user_id])
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def get_user_questions(cursor, user_id):
+    query = """
+                SELECT *
+                FROM question
+                WHERE user_id = %s;
+                """
+    cursor.execute(query, [user_id])
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def get_user_answers(cursor, user_id):
+    query = """
+                SELECT *
+                FROM answer
+                WHERE user_id = %s;
+                """
+    cursor.execute(query, [user_id])
+    return cursor.fetchall()
+
+@database_common.connection_handler
+def get_user_comments(cursor, user_id):
+    query = """
+                SELECT *
+                FROM comment
+                WHERE user_id = %s;
+                """
+    cursor.execute(query, [user_id])
+    return cursor.fetchall()

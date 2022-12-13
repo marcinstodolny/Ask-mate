@@ -427,8 +427,8 @@ def is_user_exist(cursor, username):
 @database_common.connection_handler
 def insert_new_user(cursor, username, password, time):
     query = """
-        INSERT INTO users (username, password, reputation, registration_date)
-        VALUES (%s, %s, 0, %s)"""
+        INSERT INTO users (username, password, reputation, questions_no, answers_no, comments_no, registration_date)
+        VALUES (%s, %s, 0, 0, 0, 0, %s)"""
     cursor.execute(query, [username, password, time])
 
 

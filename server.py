@@ -296,7 +296,8 @@ def user_page(user_id):
     questions = data_manager.get_user_questions(user_id)
     answers = data_manager.get_user_answers(user_id)
     comments = data_manager.get_user_comments(user_id)
-    return render_template('user_page.html', users=user_data, questions=questions, answers=answers, comments=comments)
+    answer_id_to_question_id = data_manager.get_question_id_to_bypass_lack_of_question_id_in_comments()
+    return render_template('user_page.html', users=user_data, questions=questions, answers=answers, comments=comments,answer_id_to_question_id=answer_id_to_question_id)
 
 if __name__ == '__main__':
     app.run(

@@ -526,3 +526,12 @@ def get_user_comments(cursor, user_id):
                 """
     cursor.execute(query, [user_id])
     return cursor.fetchall()
+
+@database_common.connection_handler
+def get_question_id_to_bypass_lack_of_question_id_in_comments(cursor):
+    query = """
+        SELECT id, question_id
+        FROM answer
+        """
+    cursor.execute(query)
+    return cursor.fetchall()

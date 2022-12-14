@@ -206,6 +206,8 @@ def change_reputation(cursor, item_id, table, number, user_id):
 
 @database_common.connection_handler
 def get_sorted_data(cursor, sort_by, order_by, limit):
+    if sort_by not in ['title', 'submission_time', 'vote_number', 'view_number'] or order_by not in ['DESC', 'ASC']:
+        return []
     query = f"""
             SELECT *
             FROM question
@@ -504,6 +506,7 @@ def get_users_list(cursor):
     cursor.execute(query)
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def get_user_data(cursor, user_id):
     query = """
@@ -513,6 +516,7 @@ def get_user_data(cursor, user_id):
                 """
     cursor.execute(query, [user_id])
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def get_user_questions(cursor, user_id):
@@ -524,6 +528,7 @@ def get_user_questions(cursor, user_id):
     cursor.execute(query, [user_id])
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def get_user_answers(cursor, user_id):
     query = """
@@ -534,6 +539,7 @@ def get_user_answers(cursor, user_id):
     cursor.execute(query, [user_id])
     return cursor.fetchall()
 
+
 @database_common.connection_handler
 def get_user_comments(cursor, user_id):
     query = """
@@ -543,6 +549,7 @@ def get_user_comments(cursor, user_id):
                 """
     cursor.execute(query, [user_id])
     return cursor.fetchall()
+
 
 @database_common.connection_handler
 def get_question_id_to_bypass_lack_of_question_id_in_comments(cursor):

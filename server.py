@@ -273,20 +273,20 @@ def list_users():
 
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
-    if request.method == 'POST':
-        user_name = request.form.get('user-name')
-        if data_manager.is_user_exist(user_name):
-            message = "This user name exist!"
-        else:
-            if request.form.get('password') != request.form.get('confirm-password'):
-                message = "Entered password are not the same!"
-            else:
-                hashed_password = password_management.hash_password(request.form.get('password'))
-                time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                data_manager.insert_new_user(user_name, hashed_password, time)
-                return redirect('/')
-        return render_template('registration.html', message=message)
-    return render_template('registration.html')
+    if request.method != 'POST':
+        return render_template('registration.html')
+    user_name = request.form.get('user-name')
+    if data_manager.is_user_exist(user_name):
+        message = "This user name exist!"
+    elif request.form.get('password') == request.form.get('confirm-password'):
+        hashed_password = password_management.hash_password(request.form.get('password'))
+        time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        data_manager.insert_new_user(user_name, hashed_password, time)
+        return redirect('/')
+    else:
+        message = "Entered password are not the same!"
+    return render_template('registration.html', message=message)
+
 
 @app.route('/user/<user_id>', methods=['GET', 'POST'])
 def user_page(user_id):
@@ -298,6 +298,7 @@ def user_page(user_id):
     comments = data_manager.get_user_comments(user_id)
     answer_id_to_question_id = data_manager.get_question_id_to_bypass_lack_of_question_id_in_comments()
     return render_template('user_page.html', users=user_data, questions=questions, answers=answers, comments=comments,answer_id_to_question_id=answer_id_to_question_id)
+
 
 if __name__ == '__main__':
     app.run(

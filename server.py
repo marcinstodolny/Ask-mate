@@ -80,7 +80,8 @@ def display_question(question_id):
                                answers=answers,
                                comments=comments,
                                tags=data_manager.get_tags_name_and_id_by_question_id(question_id),
-                               message=f"Logged in as {escape(session['username'])}")
+                               message=f"Logged in as {escape(session['username'])}",
+                               user_id=session['id'])
     return render_template('question.html',
                            question=question,
                            answers=answers,
@@ -304,6 +305,23 @@ def user_page(user_id):
 def bonus_questions():
     questions = bonus_questions.SAMPLE_QUESTIONS
     return render_template('bonus_questions.html', questions=questions)
+
+
+@app.route('/question/<question_id>/<answer_id>/accept', methods=['POST'])
+def accept_answer(question_id, answer_id):
+    if not is_login():
+        return redirect("/")
+    data_manager.save_accepted_answer(question_id, answer_id)
+    return redirect(f"/question/{question_id}")
+
+
+@app.route('/question/<question_id>/<answer_id>/remove_accept', methods=['POST'])
+def remove_accepted_answer(question_id, answer_id):
+    if not is_login():
+        return redirect("/")
+    data_manager.remove_accepted_answer(question_id, answer_id)
+    return redirect(f"/question/{question_id}")
+
 
 
 if __name__ == '__main__':

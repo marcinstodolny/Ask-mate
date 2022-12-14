@@ -17,12 +17,12 @@ def exchange_search_phrases(titles, answers, question_messages, search_phrases):
 
 
 def exchange_question_newlines_to_html(question):
-    question['message'] = question['message'].replace('\n', '<br>')
+    question['message'] = question['message'].replace('<', '').replace('&#60;', '   ').replace('\n', '<br>')
 
 
 def exchange_string_newlines_to_html(table):
     for i, item in enumerate(table):
-        table[i]['message'] = item['message'].replace('\n', '<br>')
+        table[i]['message'] = item['message'].replace('<', '').replace('&#60;', '').replace('\n', '<br>')
 
 
 def exchange_newlines(question, answers, comments):

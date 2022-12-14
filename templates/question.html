@@ -100,10 +100,11 @@
         <table >
             {% for answer in answers %}
                     <tr>
-                        <td style=" padding-top: 20px" id="message2">{{ answer.message |safe}}
+                        <td style=" padding-top: 20px" id="message2">
                         {% if answer.id == question.accepted %}
-                        <img src="/static/trash-bin.png" alt="" width="50">
+                            <img src="/static/accept-icon-18.png" alt="" width="50">
                     {% endif %}
+                        {{ answer.message |safe}}
                         </td>
 
                     </tr>

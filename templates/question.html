@@ -8,7 +8,7 @@
     <body>
         <div id="center">
             <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
-            {% if message %}
+            {% if user_id  %}
                 <br>{{message}}<br>
             {% endif %}
             <br>
@@ -19,20 +19,20 @@
                 Viewed {{ question.view_number }}
                 <span class="tab"></span>
                 Vote number
-                {% if message %}
+                {% if user_id %}
                 <form action="/question/{{ question.id }}/vote-up" method="post" style="display: inline-block">
                     <input class="inputs" type="submit" value="&#8593" name="vote_up">
                 </form>
                 {% endif %}
                 {{ question.vote_number }}
-                {% if message %}
+                {% if user_id %}
                 <form action="/question/{{ question.id }}/vote-down" method="post" style="display: inline-block">
                     <input class="inputs" type="submit" value="&#8595" name="vote_down">
                 </form>
                 {% endif %}
             </p>
         </div>
-        {% if message %}
+        {% if user_id == question.user_id %}
         <div id="center" style="margin-right: 175px">
             <form style="display:inline-block" action="/question/{{ question.id }}/edit" method="get">
                 <button type="submit">Edit question</button>
@@ -70,7 +70,7 @@
                     </tr>
                     <tr style="font-size: 13px">
                         <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
-                        {% if message %}
+                        {% if user_id == comment.user_id %}
                        <td>
                            <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
                                 <button type="submit">Edit</button>
@@ -100,7 +100,12 @@
         <table >
             {% for answer in answers %}
                     <tr>
-                        <td style=" padding-top: 20px" id="message2">{{ answer.message |safe}}</td>
+                        <td style=" padding-top: 20px" id="message2">{{ answer.message |safe}}
+                        {% if answer.id == question.accepted %}
+                        <img src="/static/trash-bin.png" alt="" width="50">
+                    {% endif %}
+                        </td>
+
                     </tr>
                     <tr>
                     <td class="image"><a href="/static/upload/{{ answer.image }}"><img id="image3" src="/static/upload/{{ answer.image }}" alt="" width="400"></a></td>
@@ -108,19 +113,19 @@
                     <tr style="font-size: 13px">
                         <td>Answered: {{ answer.submission_time }}</td>
                         <td>
-                            {% if message %}
+                            {% if user_id %}
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-up" method="post" style="display: inline-block">
                                 <input class="inputs" type="submit" value="&#8593" name="vote_up">
                             </form>
                             {% endif %}
                                 <span class="number">{{ answer.vote_number }}</span>
-                            {% if message %}
+                            {% if user_id %}
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-down" method="post" style="display: inline-block">
                                 <input class="inputs" type="submit" value="&#8595" name="vote_down">
                             </form>
                             {% endif %}
                         </td>
-                        {% if message %}
+                        {% if user_id == answer.user_id %}
                         <td>
                             <form action="/answer/{{ answer.id }}/edit" method="get">
                                 <button type="submit">Edit</button>
@@ -131,9 +136,30 @@
                                 <button type="submit"><img src="/static/trash-bin.png" alt="ask mate logo" width="10"></button>
                             </form>
                         </td>
+                        {% else %}
+                            <td></td>
+                            <td></td>
+                        {% endif %}
+                        {% if user_id == question.user_id and not question.accepted and user_id != answer.user_id %}
+                            <td>
+                            <form action="/question/{{ question.id }}/{{ answer.id }}/accept" method="post">
+                                <button type="submit">Accept</button>
+                            </form>
+                            </td>
+                        {% elif user_id == question.user_id and question.accepted == answer.id %}
+                            <td>
+                            <form action="/question/{{ question.id }}/{{ answer.id }}/remove_accept" method="post">
+                                <button type="submit">Remove Accept</button>
+                            </form>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+
+                    {% if user_id %}
                         <td>
                             <form action="/answer/{{ answer.id }}/new-comment">
-                                <input class="inputs" type="submit" value="Add comment" name="comment">
+                                    <input class="inputs" type="submit" value="Add comment" name="comment">
                             </form>
                         </td>
                     {% endif %}
@@ -146,7 +172,8 @@
                             </tr>
                             <tr style="font-size: 13px">
                                 <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
-                                {% if message %}
+                                {% if user_id == question.user_id %}
+                                    <td></td>
                                <td>
                                    <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
                                         <button type="submit">Edit</button>
@@ -163,11 +190,12 @@
                         {% endif %}
                     {% endfor %}
                     <tr style="border: solid black; border-width: 2px 0"></tr>
+
             {% endfor %}
         </table>
         </div>
         <footer id="center">
-            {% if message %}
+            {% if user_id %}
             <div style="margin-right: 925px;"><br><br>
             <form action="/question/{{ question.id }}/new-answer">
                 <input class="inputs" type="submit" value="Add answer" name="answer">

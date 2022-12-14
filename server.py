@@ -3,6 +3,7 @@ import datetime
 import data_manager
 import util
 import password_management
+import bonus_questions
 
 from flask import Flask, request, render_template, redirect, session, url_for, escape
 
@@ -298,6 +299,11 @@ def user_page(user_id):
     comments = data_manager.get_user_comments(user_id)
     answer_id_to_question_id = data_manager.get_question_id_to_bypass_lack_of_question_id_in_comments()
     return render_template('user_page.html', users=user_data, questions=questions, answers=answers, comments=comments,answer_id_to_question_id=answer_id_to_question_id)
+
+@app.route('/bonus-questions', methods=['GET', 'POST'])
+def bonus_questions():
+    questions = bonus_questions.SAMPLE_QUESTIONS
+    return render_template('bonus_questions.html', questions=questions)
 
 
 if __name__ == '__main__':

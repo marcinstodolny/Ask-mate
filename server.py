@@ -79,7 +79,8 @@ def display_question(question_id):
                                answers=answers,
                                comments=comments,
                                tags=data_manager.get_tags_name_and_id_by_question_id(question_id),
-                               message=f"Logged in as {escape(session['username'])}")
+                               message=f"Logged in as {escape(session['username'])}",
+                               user_id=session['id'])
     return render_template('question.html',
                            question=question,
                            answers=answers,
@@ -298,6 +299,23 @@ def user_page(user_id):
     comments = data_manager.get_user_comments(user_id)
     answer_id_to_question_id = data_manager.get_question_id_to_bypass_lack_of_question_id_in_comments()
     return render_template('user_page.html', users=user_data, questions=questions, answers=answers, comments=comments,answer_id_to_question_id=answer_id_to_question_id)
+
+
+@app.route('/question/<question_id>/<answer_id>/accept', methods=['POST'])
+def accept_answer(question_id, answer_id):
+    if not is_login():
+        return redirect("/")
+    data_manager.save_accepted_answer(question_id, answer_id)
+    return redirect(f"/question/{question_id}")
+
+
+@app.route('/question/<question_id>/<answer_id>/remove_accept', methods=['POST'])
+def remove_accepted_answer(question_id, answer_id):
+    if not is_login():
+        return redirect("/")
+    data_manager.remove_accepted_answer(question_id, answer_id)
+    return redirect(f"/question/{question_id}")
+
 
 
 if __name__ == '__main__':

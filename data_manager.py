@@ -559,3 +559,35 @@ def get_question_id_to_bypass_lack_of_question_id_in_comments(cursor):
         """
     cursor.execute(query)
     return cursor.fetchall()
+
+
+@database_common.connection_handler
+def save_accepted_answer(cursor, question_id, answer_id):
+    query = """
+           UPDATE question
+                SET
+                accepted = %s
+                WHERE id = %s;
+                UPDATE users
+                SET reputation = reputation + %s
+                FROM answer
+                WHERE users.id = answer.user_id
+                AND answer.id = %s
+           """
+    cursor.execute(query, [answer_id, question_id, 15, answer_id])
+
+
+@database_common.connection_handler
+def remove_accepted_answer(cursor, question_id, answer_id):
+    query = """
+           UPDATE question
+                SET
+                accepted = NULL
+                WHERE id = %s;
+                UPDATE users
+                SET reputation = reputation + %s
+                FROM answer
+                WHERE users.id = answer.user_id
+                AND answer.id = %s
+           """
+    cursor.execute(query, [question_id, -15, answer_id])

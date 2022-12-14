@@ -233,7 +233,7 @@ def searching():
     answers = data_manager.search_answer(search_phrases)
     question_messages = data_manager.search_question_message(search_phrases)
     util.exchange_search_phrases(titles, answers, question_messages, search_phrases)
-    return render_template('search.html', titles=titles, question_messages=question_messages, answers=answers, search=search_phrases)
+    return render_template('search.html', titles=titles, question_messages=question_messages, answers=answers, search=search_phrases, login=is_login())
 
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])

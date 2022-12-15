@@ -169,7 +169,7 @@ def get_already_voted_list(cursor, table, user_id):
 
 @database_common.connection_handler
 def change_vote_number(cursor, item_id, table, number, user_id):
-    if int(item_id) not in get_already_voted_list(table, user_id) and check_user_reputation_number(user_id, 50):
+    if int(item_id) not in get_already_voted_list(table, user_id) and check_user_reputation_number(user_id, 15):
         query = f"""
                             UPDATE {table}
                             SET
@@ -183,7 +183,7 @@ def change_vote_number(cursor, item_id, table, number, user_id):
 
 @database_common.connection_handler
 def change_reputation(cursor, item_id, table, number, user_id):
-    if int(item_id) not in get_already_voted_list(table, user_id) and check_user_reputation_number(user_id, 50):
+    if int(item_id) not in get_already_voted_list(table, user_id) and check_user_reputation_number(user_id, 15):
         query = f"""
                 UPDATE users
                 SET 
@@ -475,7 +475,7 @@ def get_users_list(cursor):
     query = """
                 SELECT *
                 FROM users
-                ORDER BY id DESC;
+                ORDER BY id;
                 """
     cursor.execute(query)
     return cursor.fetchall()
@@ -492,13 +492,12 @@ def remove_photo(id_index, folder):
         os.remove(f"{way}\\{id_index}.png")
 
 
-
 @database_common.connection_handler
 def get_users_list(cursor):
     query = """
                 SELECT *
                 FROM users
-                ORDER BY id DESC;
+                ORDER BY id;
                 """
     cursor.execute(query)
     return cursor.fetchall()

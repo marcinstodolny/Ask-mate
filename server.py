@@ -90,12 +90,15 @@ def display_question(question_id):
                                tags=data_manager.get_tags_name_and_id_by_question_id(question_id),
                                message=f"Logged in as {escape(session['username'])}",
                                user_id=session['id'],
-                               reputation=user_reputation)
+                               reputation=user_reputation,
+                               all_users=data_manager.get_users_list())
+
     return render_template('question.html',
                            question=question,
                            answers=answers,
                            comments=comments,
-                           tags=data_manager.get_tags_name_and_id_by_question_id(question_id))
+                           tags=data_manager.get_tags_name_and_id_by_question_id(question_id),
+                           all_users=data_manager.get_users_list())
 
 
 @app.route("/add_question", methods=['GET', 'POST'])

@@ -14,7 +14,8 @@
             <br>
             <p id="title"><strong>{{ question.title}}</strong></p>
             <p id="info">
-                Asked {{ question.submission_time }} ago
+                {% set asked_by = question.user_id - 1 %}
+                Asked by <b>{{ all_users[asked_by].username }}</b> {{ question.submission_time }} ago
                 <span class="tab"></span>
                 Viewed {{ question.view_number }}
                 <span class="tab"></span>
@@ -64,12 +65,13 @@
         <div id="center">
             <table>
             {% for comment in comments %}
+                {% set commented_by = comment.user_id - 1 %}
                 {% if question.id == comment.question_id %}
                     <tr>
                         <td style="padding-top: 20px" id="message2">{{ comment.message |safe}}</td>
                     </tr>
                     <tr style="font-size: 13px">
-                        <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                        <td>Commented by {{ all_users[commented_by].username }}: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
                         {% if user_id == comment.user_id %}
                        <td>
                            <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">
@@ -112,7 +114,8 @@
                     <td class="image"><a href="/static/upload/{{ answer.image }}"><img id="image3" src="/static/upload/{{ answer.image }}" alt="" width="400"></a></td>
                     </tr>
                     <tr style="font-size: 13px">
-                        <td>Answered: {{ answer.submission_time }}</td>
+                    {% set answered_by = answer.user_id - 1 %}
+                        <td>Answered by {{ all_users[answered_by].username }}: {{ answer.submission_time }}</td>
                         <td>
                             {% if user_id %}
                             <form action="/answer/{{ answer.id }}/{{ question.id }}/vote-up" method="post" style="display: inline-block">
@@ -167,13 +170,14 @@
                     </tr>
                     <tr style="border: solid gray; border-width: 1px 0"></tr>
                     {% for comment in comments %}
+                        {% set commented_by = comment.user_id - 1 %}
                         {% if answer.id == comment.answer_id %}
                             <tr>
                                 <td style="padding-top: 20px" id="message2">{{ comment.message |safe}}</td>
                             </tr>
                             <tr style="font-size: 13px">
-                                <td>Commented: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
-                                {% if user_id == question.user_id %}
+                                <td>Commented by {{ all_users[commented_by].username }}: {{ comment.submission_time }} Edited {{ comment.edited_count }} times</td>
+                                {% if user_id == comment.user_id %}
                                     <td></td>
                                <td>
                                    <form action="/comment/{{ comment.id }}/{{ question.id }}/edit" method="get">

@@ -1,6 +1,10 @@
+body {
+    text-align: center;
+}
+
 a:visited, a:link {
-        text-decoration: none;
-    }
+    text-decoration: none;
+}
 
 #center{
     text-align: center;
@@ -95,6 +99,7 @@ mark {
 }
 
 button, .inputs {
+    /*background-color: #a0b2ea;*/
     background-color: #a0b2ea;
     border: none;
     color: #343434;
@@ -112,4 +117,31 @@ button, .inputs {
 
 button:hover, .inputs:hover{
     box-shadow: 0 10px 15px 0 rgba(0,0,0,0.24),0 10px 20px 0 rgba(0,0,0,0.19);
+}
+
+#menu-icon {
+    position: fixed;
+    top: 10px;
+    left: 0;
+    width: 10%;
+    /*height: 40px*/
+}
+.menu {
+    position: fixed;
+    top: 65px;
+    left: 0;
+    width: 10%;
+    height: 100%;
+    background-color: rgba(0,0,0,5%);
+    display: None;
+}
+
+.menu-btn {
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
 }

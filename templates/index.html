@@ -1,35 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<style>
-        body{
-             text-align: center;
-        }
-</style>
 <head>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <meta charset="UTF-8">
     <title>ASK MATE by Marcin, Marcin, Basia & Tomek</title>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
 </head>
     <body>
+        <button id="menu-icon">Menu</button>
+        <div class="menu"></div>
         <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
-        {% if message %}
-        {{message}}<br>
-        <a href = "/user/{{ session['id'] }}">User profile</a>
-        <form action="/logout" id="logout">
-        <button type="submit">Logout</button>
-         </form>
-        <form action="/add_question" method="get" style="display: inline-block">
-        <button type="submit">Add new question</button>
-        <span style="margin-left: 50px"></span>
-        </form>
-        {% else %}
-        <form action="/login" id="login-page">
-        <button type="submit">Login</button>
-         </form>
-         <form action="/registration">
-             <button type="submit">Registration</button>
-         </form>
-        {% endif %}
         <form action="/list" style="display: inline-block">
             <label for="sort_by">Sort by:</label>
             <select name="sort_by" id="sort_by">
@@ -72,11 +52,6 @@
             <form action="/list" style="display: inline-block">
                 <button type="submit">All questions</button>
             </form>
-            {% if message %}
-            <form action="/users" style="display: inline-block">
-                <button type="submit">All users</button>
-            </form>
-            {% endif %}
             <span class="tab"></span>
             <form action="/tags" style="display: inline-block">
                 <button type="submit">Tags list</button>
@@ -86,5 +61,15 @@
             <br>
             <p>© 2022 Marcin, Marcin & Tomek</p>
         </footer>
+    <script>
+        let message = "{{ message }}";
+        let reputation = 0;
+        let user_id = "{{ session['id'] }}";
+
+        if ("{{ reputation }}") {
+            reputation = {{ reputation }} + 0;
+        }
+    </script>
+    <script src="/static/js/menu.js"></script>
     </body>
 </html>

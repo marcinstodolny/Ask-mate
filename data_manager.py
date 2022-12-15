@@ -1,9 +1,4 @@
 import os
-from typing import List, Dict
-
-from psycopg2 import sql
-from psycopg2.extras import RealDictCursor
-
 import database_common
 
 
@@ -174,7 +169,7 @@ def get_already_voted_list(cursor, table, user_id):
 
 @database_common.connection_handler
 def change_vote_number(cursor, item_id, table, number, user_id):
-    if int(item_id) not in get_already_voted_list(table, user_id):
+    if int(item_id) not in get_already_voted_list(table, user_id) and check_user_reputation_number(user_id, 50):
         query = f"""
                             UPDATE {table}
                             SET
@@ -182,16 +177,13 @@ def change_vote_number(cursor, item_id, table, number, user_id):
                             FROM users
                             WHERE {table}.id = %s
                             AND {table}.user_id != %s;
-                            UPDATE users
-                            SET {table}s_voted = ARRAY_APPEND({table}s_voted, %s)
-                            WHERE users.id = %s;
                             """
-        cursor.execute(query, [number, item_id, user_id, int(item_id), user_id])
+        cursor.execute(query, [number, item_id, user_id])
 
 
 @database_common.connection_handler
 def change_reputation(cursor, item_id, table, number, user_id):
-    if int(item_id) not in get_already_voted_list(table, user_id):
+    if int(item_id) not in get_already_voted_list(table, user_id) and check_user_reputation_number(user_id, 50):
         query = f"""
                 UPDATE users
                 SET 
@@ -199,9 +191,25 @@ def change_reputation(cursor, item_id, table, number, user_id):
                 FROM {table}
                 WHERE users.id = {table}.user_id
                 AND {table}.id = %s
-                AND users.id != %s
+                AND users.id != %s;
+                UPDATE users
+                SET {table}s_voted = ARRAY_APPEND({table}s_voted, %s)
+                WHERE users.id = %s;
                 """
-        cursor.execute(query, [number, item_id, user_id])
+        cursor.execute(query, [number, item_id, user_id, int(item_id), user_id])
+
+
+@database_common.connection_handler
+def check_user_reputation_number(cursor, user_id, number):
+    query = """
+            SELECT reputation
+            FROM users
+            WHERE id = %s
+            AND reputation >= %s
+            """
+    cursor.execute(query, [user_id, number])
+    if reputation := cursor.fetchall():
+        return reputation[0]['reputation']
 
 
 @database_common.connection_handler
@@ -446,8 +454,8 @@ def is_user_exist(cursor, username):
 @database_common.connection_handler
 def insert_new_user(cursor, username, password, time):
     query = """
-        INSERT INTO users (username, password, reputation, questions_no, answers_no, comments_no, registration_date)
-        VALUES (%s, %s, 0, 0, 0, 0, %s)"""
+        INSERT INTO users (username, password, reputation, questions_no, answers_no, comments_no, registration_date, questions_voted, answers_voted)
+        VALUES (%s, %s, 0, 0, 0, 0, %s, array[]::integer[], array[]::integer[])"""
     cursor.execute(query, [username, password, time])
 
 
@@ -483,17 +491,6 @@ def remove_photo(id_index, folder):
     if os.path.exists(f"{way}\\{id_index}.png"):
         os.remove(f"{way}\\{id_index}.png")
 
-
-# get question with microseconds - more secure version of get id by time
-# data_manager.update_question_time(question_time.strftime("%Y-%m-%d %H:%M:%S"), question_id)
-# @database_common.connection_handler
-# def update_time(cursor, table, time, question_id):
-#     query = """
-#                 UPDATE question
-#                 SET submission_time = %s
-#                 WHERE id = %s;
-#                 """
-#     cursor.execute(query, [time, question_id])
 
 
 @database_common.connection_handler

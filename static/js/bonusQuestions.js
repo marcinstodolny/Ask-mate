@@ -30,7 +30,7 @@ function getFilteredItems(items, filterValue) {
             if (items[i]['Title'].includes(filterValue)) {
                 filtered_items.push(items[i])
             }
-            else if (filterValue[0] === "!" && !(items[i]['Title'].includes(filterValue.substring(1,filterValue.length)))) {
+            else if (filterValue[0] === "!" && !(filterValue.substring(1,13) === "Description:") && !(items[i]['Title'].includes(filterValue.substring(1,filterValue.length)))) {
                 filtered_items.push(items[i])
             }
             else if (filterValue.substring(0,12) === "Description:" && (items[i]['Description'].includes(filterValue.substring(12,filterValue.length)))) {

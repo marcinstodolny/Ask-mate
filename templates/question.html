@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
-<link rel="stylesheet" href="/static/style.css">
 <head>
+    <link rel="stylesheet" href="/static/style.css">
     <meta charset="UTF-8">
     <title>ASK MATE by Marcin, Marcin, Basia & Tomek</title>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
 </head>
     <body>
+        <button id="menu-icon">Menu</button>
+        <div class="menu"></div>
         <div id="center">
             <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a>
-            {% if user_id  %}
-                <br>{{message}}<br>
-            {% endif %}
             <br>
             <p id="title"><strong>{{ question.title}}</strong></p>
             <p id="info">
@@ -208,5 +208,15 @@
             </form>
             <p>© 2022 Marcin, Marcin, Basia & Tomek</p>
         </footer>
+        <script>
+            let message = "{{ message }}";
+            let reputation = 0;
+            let user_id = "{{ session['id'] }}";
+
+            if ("{{ reputation }}") {
+                reputation = {{ reputation }} + 0;
+            }
+        </script>
+        <script src="/static/js/menu.js"></script>
     </body>
 </html>

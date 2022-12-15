@@ -23,7 +23,13 @@ def all_questions():
     order_by = request.args.get('order_by')
     questions = util.sort_list() if sort_by is None else util.sort_list(sort_by, order_by)
     if is_login():
-        return render_template('index.html', message=f"Logged in as {escape(session['username'])}", questions=questions, sort=sort_by, order=order_by)
+        user_reputation = data_manager.get_user_data(session['id'])[0]['reputation']
+        return render_template('index.html',
+                               message=f"Logged in as {escape(session['username'])}",
+                               questions=questions,
+                               sort=sort_by,
+                               order=order_by,
+                               reputation=user_reputation)
     return render_template('index.html', questions=questions, sort=sort_by, order=order_by)
 
 
@@ -31,7 +37,8 @@ def all_questions():
 def main_page():
     questions = util.sort_list(limit='LIMIT 5')
     if is_login():
-        return render_template('index.html', message=f"Logged in as {escape(session['username'])}", questions=questions)
+        user_reputation = data_manager.get_user_data(session['id'])[0]['reputation']
+        return render_template('index.html', message=f"Logged in as {escape(session['username'])}", questions=questions, reputation=user_reputation)
     return render_template('index.html', questions=questions)
 
 
@@ -75,13 +82,15 @@ def display_question(question_id):
     data_manager.increment_view_number(question_id)
     util.exchange_newlines(question, answers, comments)
     if 'username' in session:
+        user_reputation = data_manager.get_user_data(session['id'])[0]['reputation']
         return render_template('question.html',
                                question=question,
                                answers=answers,
                                comments=comments,
                                tags=data_manager.get_tags_name_and_id_by_question_id(question_id),
                                message=f"Logged in as {escape(session['username'])}",
-                               user_id=session['id'])
+                               user_id=session['id'],
+                               reputation=user_reputation)
     return render_template('question.html',
                            question=question,
                            answers=answers,
@@ -235,7 +244,18 @@ def searching():
     answers = data_manager.search_answer(search_phrases)
     question_messages = data_manager.search_question_message(search_phrases)
     util.exchange_search_phrases(titles, answers, question_messages, search_phrases)
-    return render_template('search.html', titles=titles, question_messages=question_messages, answers=answers, search=search_phrases, login=is_login())
+    message = ""
+    user_reputation = 0
+    if is_login():
+        message = f"Logged in as {escape(session['username'])}"
+        user_reputation = data_manager.get_user_data(session['id'])[0]['reputation']
+    return render_template('search.html',
+                           titles=titles,
+                           question_messages=question_messages,
+                           answers=answers,
+                           search=search_phrases,
+                           message=message,
+                           reputation=user_reputation)
 
 
 @app.route('/question/<question_id>/new-tag', methods=['GET', 'POST'])
@@ -270,7 +290,10 @@ def list_users():
     if not is_login():
         return redirect("/")
     users_list = data_manager.get_users_list()
-    return render_template('users_list.html', users=users_list)
+    return render_template('users_list.html',
+                           users=users_list,
+                           reputation=data_manager.get_user_data(session['id'])[0]['reputation'],
+                           message=f"Logged in as {escape(session['username'])}")
 
 
 @app.route('/registration', methods=['GET', 'POST'])

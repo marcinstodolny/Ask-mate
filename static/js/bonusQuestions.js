@@ -39,14 +39,30 @@ function getFilteredItems(items, filterValue) {
     return filtered_items
 }
 
+let body = document.body;
+body.style.backgroundColor = "white";
+
+let table = document.getElementById("doNotModifyThisId_QuestionsTableBody");
+table.style.fontSize = "15px";
+let currentFontSize = parseFloat(window.getComputedStyle(table, null).fontSize);
+
 function toggleTheme() {
-    console.log("toggle theme")
+    if (body.style.backgroundColor === "white") {
+        body.style.backgroundColor = "grey";
+    } else {
+        body.style.backgroundColor = "white";
+    }
 }
 
 function increaseFont() {
-    console.log("increaseFont")
+    if (currentFontSize < 15) {
+        table.style.fontSize = ++currentFontSize + 'px';
+  }
 }
 
 function decreaseFont() {
     console.log("decreaseFont")
+    if (currentFontSize > 3) {
+        table.style.fontSize = --currentFontSize + 'px';
+  }
 }

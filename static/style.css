@@ -1,6 +1,10 @@
+body {
+    text-align: center;
+}
+
 a:visited, a:link {
-        text-decoration: none;
-    }
+    text-decoration: none;
+}
 
 #center{
     text-align: center;

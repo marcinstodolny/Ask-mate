@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-        body{
-             text-align: center;
-        }
         th {
              text-align: center;
         }
 </style>
 <head>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <meta charset="UTF-8">
     <title>ASK MATE - Users list</title>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
 </head>
     <body>
+        <button id="menu-icon">Menu</button>
+        <div class="menu"></div>
         <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
         <table id="users_list" >
             <tr>
@@ -44,5 +44,15 @@
             <br>
             <p>© 2022 Marcin, Marcin & Tomek</p>
         </footer>
+        <script>
+        let message = "{{ message }}";
+        let reputation = 0;
+        let user_id = "{{ session['id'] }}";
+
+        if ("{{ reputation }}") {
+            reputation = {{ reputation }} + 0;
+        }
+        </script>
+        <script src="/static/js/menu.js"></script>
     </body>
 </html>

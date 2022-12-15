@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-        body{
-             text-align: center;
-        }
         th {
              text-align: center;
         }
 </style>
 <head>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <meta charset="UTF-8">
     <title>ASK MATE - user page</title>
 </head>
@@ -30,13 +27,13 @@
                     {% elif user.reputation >= 5000 %}
                     <img src="/static/avatar_lvl5.png"><br><br>
                     {% endif %}
-                    <p style="font-size:16px">{{user.username}}</p>
-                    <p style="font-size:12px">
+                    <p style="font-size:30px">{{user.username}}</p>
+                    <p style="font-size:15px">
                     Reputation: <br><b>{{user.reputation}}</b><br>
                     Registered on: <br><b>{{user.registration_date}}</b><br>
                     Number of questions: <br><b>{{user.questions_no}}</b><br>
                     Number of answers: <br><b>{{user.answers_no}}</b><br>
-                    Number of commentss: <br><b>{{user.comments_no}}</b><br>
+                    Number of comments: <br><b>{{user.comments_no}}</b><br>
                     </p>
                 </td>
             {% endfor %}

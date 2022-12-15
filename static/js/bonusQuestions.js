@@ -1,29 +1,24 @@
 // you receive an array of objects which you must sort in the by the key "sortField" in the "sortDirection"
-function getSortedItems(items, sortField, sortDirection) {
-    // console.log(items)
-    // console.log(sortField)
-    // console.log(sortDirection)
 
-    // === SAMPLE CODE ===
-    // if you have not changed the original html uncomment the code below to have an idea of the
-    // effect this function has on the table
-    //
+function getSortedItems(items, sortField, sortDirection) {
+    let sorted
     if (sortDirection === "asc") {
-        const firstItem = items.shift()
-        if (firstItem) {
-            items.push(firstItem)
+        if (sortField === 'Title' || sortField === 'Description') {
+            sorted = items.sort((a, b) => a[sortField].localeCompare(b[sortField]));
+        } else {
+            sorted = items.sort((a, b) => a[sortField] - b[sortField]);
         }
     } else {
-        const lastItem = items.pop()
-        if (lastItem) {
-            items.push(lastItem)
+        if (sortField === 'Title' || sortField === 'Description') {
+            sorted = items.sort((a, b) => b[sortField].localeCompare(a[sortField]));
+        } else {
+            sorted = items.sort((a, b) => b[sortField] - a[sortField]);
         }
     }
-
-    return items
+    return sorted
 }
 
-// you receive an array of objects which you must filter by all it's keys to have a value matching "filterValue"
+// you receive an array of objects which you must filter by all its keys to have a value matching "filterValue"
 function getFilteredItems(items, filterValue) {
     let filtered_items = []
         for (let i=0; i<items.length; i++) {

@@ -31,7 +31,8 @@ def all_questions():
 def main_page():
     questions = util.sort_list(limit='LIMIT 5')
     if is_login():
-        return render_template('index.html', message=f"Logged in as {escape(session['username'])}", questions=questions)
+        user_reputation = data_manager.get_user_data(session['id'])[0]['reputation']
+        return render_template('index.html', message=f"Logged in as {escape(session['username'])}", questions=questions, reputation=user_reputation)
     return render_template('index.html', questions=questions)
 
 

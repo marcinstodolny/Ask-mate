@@ -9,27 +9,31 @@
     <link rel="stylesheet" href="static/style.css">
     <meta charset="UTF-8">
     <title>ASK MATE by Marcin, Marcin, Basia & Tomek</title>
+    <script src="https://code.jquery.com/jquery-3.6.2.min.js"></script>
+    <script src="/static/js/index.js"></script>
 </head>
     <body>
+        <button id="menu-icon">Menu</button>
+        <div class="menu"></div>
         <a href="/"><img src="/static/logo-small.png" alt="ask mate logo"></a><br><br>
-        {% if message %}
-        {{message}}<br>
-        <a href = "/user/{{ session['id'] }}">User profile</a>
-        <form action="/logout" id="logout">
-        <button type="submit">Logout</button>
-         </form>
-        <form action="/add_question" method="get" style="display: inline-block">
-        <button type="submit">Add new question</button>
-        <span style="margin-left: 50px"></span>
-        </form>
-        {% else %}
-        <form action="/login" id="login-page">
-        <button type="submit">Login</button>
-         </form>
-         <form action="/registration">
-             <button type="submit">Registration</button>
-         </form>
-        {% endif %}
+{#        {% if message %}#}
+{#        {{message}}<br>#}
+{#        <a href = "/user/{{ session['id'] }}">User profile</a>#}
+{#        <form action="/logout" id="logout">#}
+{#        <button type="submit">Logout</button>#}
+{#         </form>#}
+{#        <form action="/add_question" method="get" style="display: inline-block">#}
+{#        <button type="submit">Add new question</button>#}
+{#        <span style="margin-left: 50px"></span>#}
+{#        </form>#}
+{#        {% else %}#}
+{#        <form action="/login" id="login-page">#}
+{#        <button type="submit">Login</button>#}
+{#         </form>#}
+{#         <form action="/registration">#}
+{#             <button type="submit">Registration</button>#}
+{#         </form>#}
+{#        {% endif %}#}
         <form action="/list" style="display: inline-block">
             <label for="sort_by">Sort by:</label>
             <select name="sort_by" id="sort_by">
@@ -86,5 +90,29 @@
             <br>
             <p>© 2022 Marcin, Marcin & Tomek</p>
         </footer>
+
+    <script>
+        if ("{{message}}") {
+            let reputation = {{ reputation }}
+            $('.menu').append(`<p style="font-size: 20px">{{ message }}</p>`);
+            if (reputation < 100) {
+                $('.menu').append(`<img width="100px" height="100px" src="/static/avatar_lvl1.png"><br><br>`);
+            } else if (reputation >= 100 && reputation < 500) {
+                $('.menu').append(`<img width="100px" height="100px" src="/static/avatar_lvl2.png"><br><br>`);
+            } else if (reputation >= 500 && reputation < 1000) {
+                $('.menu').append(`<img width="100px" height="100px" src="/static/avatar_lvl3.png"><br><br>`);
+            } else if (reputation >= 1000 && reputation < 5000) {
+                $('.menu').append(`<img width="100px" height="100px" src="/static/avatar_lvl4.png"><br><br>`);
+            } else if (reputation >= 5000) {
+                $('.menu').append(`<img width="100px" height="100px" src="/static/avatar_lvl5.png"><br><br>`);
+            }
+            $('.menu').append(`<button class="menu-btn" onclick="location.href='/user/{{ session['id'] }}'">User profile</button>`);
+            $('.menu').append(`<button class="menu-btn" onclick="location.href='/add_question'">Add new question</button>`);
+            $('.menu').append(`<button class="menu-btn" onclick="location.href='/logout'">Logout</button>`);
+        } else {
+            $('.menu').append(`<button class="menu-btn" onclick="location.href='/login'">Login</button>`);
+            $('.menu').append(`<button class="menu-btn" onclick="location.href='/registration'">Registration</button>`);
+        }
+    </script>
     </body>
 </html>

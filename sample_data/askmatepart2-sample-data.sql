@@ -138,11 +138,11 @@ booklet
 app.js (bundled file with webpack, including jquery)', 'question\1.png');
 INSERT INTO question VALUES (2, 3, '2017-07-01 13:47:00', 156, 57, 'Drawing canvas with an image picked with Cordova Camera Plugin', 'I''m getting an image from device and drawing a canvas with filters using Pixi JS. It works all well using computer to get an image. But when I''m on IOS, it throws errors such as cross origin issue, or that I''m trying to use an unknown format.
 ', NULL);
-INSERT INTO question VALUES (3, 1, '2017-08-01 10:49:42', 1364, 10, 'How to add new line inside HTML', 'How to do that', NULL, 3);
+INSERT INTO question VALUES (3, 1, '2017-08-01 10:49:42', 1364, 10, 'How to add new line inside HTML', 'How to do that', NULL);
 INSERT INTO question VALUES (4, 1, '2017-09-01 15:41:05', 9427, 253, 'What does if __name__ == "__main__": do?', 'What does this do, and why should one include the if statement?
 
 if __name__ == "__main__":
-    print("Hello, World!")', NULL, 4);
+    print("Hello, World!")', NULL);
 INSERT INTO question VALUES (5, 3, '2017-09-01 19:41:30', 1364, 28, 'How do I check if a list is empty?', 'For example, if passed the following:
 
 a = []
@@ -152,7 +152,7 @@ SELECT pg_catalog.setval('question_id_seq', 4, true);
 INSERT INTO answer VALUES (1, 2, '2017-04-28 16:49:00', 4, 0, 'You need to use brackets: my_list = []', NULL);
 INSERT INTO answer VALUES (2, 3, '2017-04-25 14:42:00', 35, 0, 'Look it up in the Python docs', 'answer\2.png');
 INSERT INTO answer VALUES (3, 2, '2017-09-25 14:42:00', 35, 3, 'try:', 'answer\1.png');
-INSERT INTO answer VALUES (4, 2, '2017-09-02 19:21:00', 900, 4, 'It''s boilerplate code that protects users from accidentally invoking the script when they didn''t intend to. Here are some common problems when the guard is omitted from a script:
+INSERT INTO answer VALUES (4, 3, '2017-09-02 19:21:00', 900, 4, 'It''s boilerplate code that protects users from accidentally invoking the script when they didn''t intend to. Here are some common problems when the guard is omitted from a script:
 
 If you import the guardless script in another script (e.g. import my_script_without_a_name_eq_main_guard), then the latter script will trigger the former to run at import time and using the second script''s command line arguments. This is almost always a mistake.
 

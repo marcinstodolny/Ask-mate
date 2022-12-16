@@ -59,7 +59,8 @@ def login_page():
 def login_attempt():
     if request.method == 'POST':
         username = request.form['username']
-        if is_registered(username) and password_management.verify_password(request.form.get('password'), data_manager.get_user_password(username)[0]['password']):
+        if is_registered(username) and password_management.verify_password(request.form.get('password'),
+                                                                           data_manager.get_user_password(username)[0]['password']):
             session['username'] = username
             session['id'] = data_manager.get_user_id(session['username'])[0]['id']
             return redirect(url_for('main_page'))
@@ -81,7 +82,7 @@ def display_question(question_id):
     comments = data_manager.get_comments()
     data_manager.increment_view_number(question_id)
     util.exchange_newlines(question, answers, comments)
-    if 'username' in session:
+    if is_login():
         user_reputation = data_manager.get_user_data(session['id'])[0]['reputation']
         return render_template('question.html',
                                question=question,
@@ -131,7 +132,7 @@ def edit_question(question_id):
 
 @app.route("/question/<question_id>/delete", methods=['POST'])
 def delete_question(question_id):
-    if request.method == 'POST' and is_login():
+    if request.method == 'POST' and is_login() and session['id'] == data_manager.get_question_by_id(question_id)[0]['user_id']:
         data_manager.remove_images(question_id)
         data_manager.delete_question(question_id)
         return redirect('/')
@@ -140,25 +141,29 @@ def delete_question(question_id):
 @app.route("/question/<question_id>/vote-up", methods=["POST"])
 @app.route("/answer/<answer_id>/<question_id>/vote-up", methods=["POST"])
 def up_vote(question_id, answer_id=None):
+    vote_gain = 1
     if answer_id and is_login():
-        data_manager.change_vote_number(answer_id, 'answer', 1, session['id'])
-        data_manager.change_reputation(answer_id, 'answer', 10, session['id'])
+        vote_update(answer_id, 'answer', vote_gain, reputation=10)
     elif is_login():
-        data_manager.change_vote_number(question_id, 'question', 1, session['id'])
-        data_manager.change_reputation(question_id, 'question', 5, session['id'])
+        vote_update(question_id, 'question', vote_gain, reputation=5)
     return redirect(f"/question/{question_id}")
 
 
 @app.route("/question/<question_id>/vote-down", methods=["POST"])
 @app.route("/answer/<answer_id>/<question_id>/vote-down", methods=["POST"])
 def down_vote(question_id, answer_id=None):
+    vote_decrease = -1
+    reputation_decrease = -2
     if answer_id and is_login():
-        data_manager.change_vote_number(answer_id, 'answer', -1, session['id'])
-        data_manager.change_reputation(answer_id, 'answer', -2, session['id'])
+        vote_update(answer_id, 'answer', vote_decrease, reputation_decrease)
     elif is_login():
-        data_manager.change_vote_number(question_id, 'question', -1, session['id'])
-        data_manager.change_reputation(question_id, 'question', -2, session['id'])
+        vote_update(question_id, 'question', vote_decrease, reputation_decrease)
     return redirect(f"/question/{question_id}")
+
+
+def vote_update(item_id, table, vote, reputation):
+    data_manager.change_vote_number(item_id, table, vote, session['id'])
+    data_manager.change_reputation(item_id, table, reputation, session['id'])
 
 
 @app.route("/question/<question_id>/new-comment", methods=["POST", "GET"])

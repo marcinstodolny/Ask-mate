@@ -2,18 +2,13 @@
 
 function getSortedItems(items, sortField, sortDirection) {
     let sorted
-    if (sortDirection === "asc") {
-        if (sortField === 'Title' || sortField === 'Description') {
+    if (sortField === 'Title' || sortField === 'Description') {
             sorted = items.sort((a, b) => a[sortField].localeCompare(b[sortField]));
         } else {
             sorted = items.sort((a, b) => a[sortField] - b[sortField]);
         }
-    } else {
-        if (sortField === 'Title' || sortField === 'Description') {
-            sorted = items.sort((a, b) => b[sortField].localeCompare(a[sortField]));
-        } else {
-            sorted = items.sort((a, b) => b[sortField] - a[sortField]);
-        }
+    if (sortDirection === "desc") {
+        sorted.reverse()
     }
     return sorted
 }

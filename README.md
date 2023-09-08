@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-ASK MATE is Q&A web application developed by Marcin Szkurłat, Marcin Stodolny, and Tomek Citko. It is built using Flask, Python, JavaScript, HTML, CSS, and PostgreSQL, and follows agile development methodologies, structured into three sprints.
+ASK MATE is a Q&A web application built using Flask, Python, JavaScript, HTML, CSS, and PostgreSQL. It follows agile development methodologies and is structured into three sprints.
 
 ## Usage
 

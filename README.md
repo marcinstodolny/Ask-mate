@@ -8,6 +8,16 @@ ASK MATE is a Q&A web application built using Flask, Python, JavaScript, HTML, C
 
 You can use ASK MATE to ask and answer questions, upvote or downvote content, and enjoy the new features added in each sprint. Make sure to register and log in for a personalized experience.
 
+## Sprint 1 - Web App Features
+
+In the first sprint, the focus was on creating the initial version of ASK MATE with basic Q&A functionality. The following features were implemented:
+
+- Anyone can add questions.
+- Anyone can answer questions.
+- Each question and answer can be upvoted or downvoted.
+- Each contribution expands the database of wisdom.
+- Adding images to questions and answers.
+
 ## Sprint 2 - New Features
 
 In the second sprint, the project introduced new features to enhance usability and functionality:

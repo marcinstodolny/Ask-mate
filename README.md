@@ -42,17 +42,19 @@ To get started with ASK MATE, follow these steps:
 
 ## Technologies and Tools Used
 
-- ![Git](https://img.shields.io/badge/Git-informational?style=flat&logo=git)
-- ![GitHub](https://img.shields.io/badge/GitHub-informational?style=flat&logo=github)
-- ![Python](https://img.shields.io/badge/Python-informational?style=flat&logo=python)
-- ![Trello](https://img.shields.io/badge/Trello-informational?style=flat&logo=trello)
-- ![JavaScript (JS)](https://img.shields.io/badge/JavaScript_(JS)-informational?style=flat&logo=javascript)
-- ![HTML](https://img.shields.io/badge/HTML-informational?style=flat&logo=html5)
-- ![CSS](https://img.shields.io/badge/CSS-informational?style=flat&logo=css3)
-- ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-informational?style=flat&logo=postgresql)
-- ![PyCharm](https://img.shields.io/badge/PyCharm-informational?style=flat&logo=pycharm)
-- ![Jinja](https://img.shields.io/badge/Jinja-informational?style=flat&logo=jinja)
-- ![Flask](https://img.shields.io/badge/Flask-informational?style=flat&logo=flask)
+
+
+- ![Git](https://img.shields.io/badge/Git-F05032?style=flat&logo=git&logoColor=white)
+- ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
+- ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white)
+- ![Trello](https://img.shields.io/badge/Trello-0079BF?style=flat&logo=trello&logoColor=white)
+- ![JavaScript (JS)](https://img.shields.io/badge/JavaScript_(JS)-F7DF1E?style=flat&logo=javascript&logoColor=black)
+- ![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
+- ![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white)
+- ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white)
+- ![PyCharm](https://img.shields.io/badge/PyCharm-000000?style=flat&logo=pycharm&logoColor=white)
+- ![Jinja](https://img.shields.io/badge/Jinja-B41717?style=flat&logo=jinja&logoColor=white)
+- ![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white)
 
 ### Project Team
 
